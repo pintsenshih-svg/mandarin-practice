@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>來！學華語 — Práctica de conversación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #1C2333;
+  --ink-soft: #3D4558;
+  --vermillion: #D94F3D;
+  --vermillion-pale: #FDF0EE;
+  --jade: #3A9E8A;
+  --jade-pale: #EBF7F5;
+  --paper: #F5F2EC;
+  --paper-dark: #EDE9E0;
+  --mist: #E4E0D8;
+  --gold: #C8933A;
+  --gold-pale: #FDF5E6;
+  --white: #FFFFFF;
+  --muted: #7D7A74;
+  --sidebar-w: 280px;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  height: 56px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  flex-shrink: 0;
+  z-index: 200;
+}
+.topbar-logo {
+  font-family: 'Noto Serif TC', serif;
+  color: var(--white);
+  font-size: 19px;
+  letter-spacing: 0.02em;
+}
+.topbar-logo span { color: var(--vermillion); }
+.topbar-sub { color: #8A90A2; font-size: 12px; }
+.topbar-spacer { flex: 1; }
+.topbar-teacher-btn {
+  background: none;
+  border: 1px solid #3D4558;
+  color: #8A90A2;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.topbar-teacher-btn:hover { border-color: var(--gold); color: var(--gold); }
+.menu-toggle {
+  display: none;
+  background: none; border: none;
+  color: var(--white); font-size: 22px; cursor: pointer;
+}
+
+/* ── LAYOUT ── */
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--white);
+  border-right: 1px solid var(--mist);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--mist);
+}
+.sidebar-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.search-input {
+  width: 100%;
+  border: 1.5px solid var(--mist);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 13px;
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+}
+.search-input:focus { border-color: var(--vermillion); }
+.lesson-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.lesson-list::-webkit-scrollbar { width: 4px; }
+.lesson-list::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 2px; }
+.lesson-item {
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.12s;
+  margin-bottom: 2px;
+}
+.lesson-item:hover { background: var(--paper); }
+.lesson-item.active { background: var(--vermillion-pale); }
+.lesson-num {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  background: var(--paper-dark);
+  color: var(--muted);
+  font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.lesson-item.active .lesson-num { background: var(--vermillion); color: white; }
+.lesson-item-text { flex: 1; min-width: 0; }
+.lesson-item-zh {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 14px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lesson-item-es { font-size: 11px; color: var(--muted); }
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--mist);
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ── MAIN CHAT AREA ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Mode tabs */
+.mode-tabs {
+  background: var(--white);
+  border-bottom: 1px solid var(--mist);
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.huayecai-name {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mode-active-pill {
+  background: var(--ink);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.lesson-badge {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--paper);
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--mist);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+/* Meta-boxes rendered in chat */
+.box-context {
+  background: #EBF7F5;
+  border-left: 3px solid var(--jade);
+  border-radius: 0 8px 8px 0;
+  padding: 9px 13px;
+  font-size: 13px;
+  color: #1A5C52;
+  margin-top: 6px;
+}
+.box-context strong { color: var(--jade); }
+.box-correction {
+  background: var(--gold-pale);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 9px 13px;
+  font-size: 13px;
+  color: #5C3D00;
+  margin-top: 6px;
+}
+.box-correction strong { color: var(--gold); }
+.box-help {
+  background: #F0F4FF;
+  border-left: 3px solid #5B7FD4;
+  border-radius: 0 8px 8px 0;
+  padding: 9px 13px;
+  font-size: 13px;
+  color: #1A2A5C;
+  margin-top: 6px;
+}
+.box-help strong { color: #5B7FD4; }
+.transition-card {
+  background: var(--jade-pale);
+  border: 1px solid #A8DFDA;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #1A5C52;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.transition-card .t-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.transition-card .t-btn {
+  background: var(--jade);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.transition-card .t-btn:hover { opacity: 0.85; }
+
+/* Messages */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.messages::-webkit-scrollbar { width: 5px; }
+.messages::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 3px; }
+
+.msg-row { display: flex; gap: 10px; max-width: 72%; }
+.msg-row.ai { align-self: flex-start; }
+.msg-row.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  background: var(--paper-dark);
+}
+.msg-row.user .msg-avatar { background: var(--ink); color: white; font-size: 14px; }
+
+.msg-body { display: flex; flex-direction: column; gap: 3px; }
+
+.bubble {
+  border-radius: 16px 16px 16px 4px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 1px solid var(--mist);
+  line-height: 1.65;
+}
+.msg-row.user .bubble {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  border-radius: 16px 16px 4px 16px;
+}
+.bubble-zh {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 17px;
+  color: var(--ink);
+}
+.msg-row.user .bubble-zh { color: white; }
+.bubble-py {
+  font-size: 12px;
+  color: var(--vermillion);
+  margin-top: 3px;
+  font-style: italic;
+}
+.bubble-es {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.msg-row.user .bubble-py,
+.msg-row.user .bubble-es { color: rgba(255,255,255,0.6); }
+
+.feedback-card {
+  background: var(--gold-pale);
+  border: 1px solid #E8D5AA;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #6B4C0A;
+  margin-top: 4px;
+}
+.feedback-card strong { color: var(--gold); }
+.feedback-card .correct { color: var(--jade); font-weight: 600; font-family: 'Noto Sans TC', sans-serif; }
+
+.praise-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--jade-pale);
+  color: var(--jade);
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Typing indicator */
+.typing-row { align-self: flex-start; display: flex; gap: 10px; align-items: center; }
+.typing-bubble {
+  background: var(--white);
+  border: 1px solid var(--mist);
+  border-radius: 16px;
+  padding: 12px 18px;
+  display: flex; gap: 5px; align-items: center;
+}
+.typing-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: typingBounce 1.3s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-7px); opacity: 1; }
+}
+
+/* Welcome / empty state */
+.welcome-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  text-align: center;
+}
+.welcome-icon { font-size: 52px; }
+.welcome-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 22px;
+  color: var(--ink);
+}
+.welcome-sub { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 340px; }
+
+/* ── INPUT AREA ── */
+.input-area {
+  background: var(--white);
+  border-top: 1px solid var(--mist);
+  padding: 12px 16px 14px;
+  flex-shrink: 0;
+}
+.quick-chips {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+}
+.quick-chips::-webkit-scrollbar { display: none; }
+.chip {
+  background: var(--paper);
+  border: 1px solid var(--mist);
+  border-radius: 16px;
+  padding: 5px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink);
+  transition: background 0.1s, border-color 0.1s;
+}
+.chip:hover { background: var(--vermillion-pale); border-color: var(--vermillion); }
+
+.input-row { display: flex; gap: 10px; align-items: flex-end; }
+.text-input {
+  flex: 1;
+  border: 1.5px solid var(--mist);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  resize: none;
+  max-height: 100px;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+.text-input:focus { border-color: var(--vermillion); background: white; }
+.text-input::placeholder { color: var(--muted); font-family: Inter, sans-serif; font-size: 14px; }
+
+.btn-group { display: flex; gap: 8px; align-items: flex-end; }
+
+/* Voice button — the signature ink-drop element */
+.voice-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--paper-dark);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.voice-btn:hover { background: var(--paper); color: var(--ink); }
+.voice-btn.recording {
+  background: var(--vermillion);
+  color: white;
+  animation: inkPulse 1.2s ease-out infinite;
+}
+@keyframes inkPulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 79, 61, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(217, 79, 61, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 79, 61, 0); }
+}
+.voice-btn svg { pointer-events: none; }
+
+.send-btn {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: var(--ink);
+  color: white;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.send-btn:hover { background: var(--ink-soft); }
+.send-btn:disabled { background: var(--mist); cursor: not-allowed; }
+
+.voice-status {
+  font-size: 12px;
+  color: var(--vermillion);
+  text-align: center;
+  height: 16px;
+  margin-top: 6px;
+}
+
+/* Hint button */
+.hint-btn {
+  background: none;
+  border: 1px solid var(--mist);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.hint-btn:hover { border-color: var(--jade); color: var(--jade); }
+
+/* ── TEACHER MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(28, 35, 51, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 580px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+}
+.modal-header {
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--mist);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.modal-header h2 {
+  font-size: 17px; font-weight: 600; flex: 1;
+}
+.modal-close {
+  background: none; border: none;
+  font-size: 20px; color: var(--muted); cursor: pointer;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: background 0.1s;
+}
+.modal-close:hover { background: var(--paper); }
+
+.modal-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 18px; }
+
+/* Auth gate */
+.auth-gate { display: flex; flex-direction: column; gap: 14px; }
+.auth-gate h3 { font-size: 15px; color: var(--ink); }
+.auth-gate p { font-size: 13px; color: var(--muted); }
+.field-label { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.field-input {
+  width: 100%;
+  border: 1.5px solid var(--mist);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  color: var(--ink);
+}
+.field-input:focus { border-color: var(--gold); }
+.btn-primary {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--ink-soft); }
+.btn-gold {
+  background: var(--gold);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-gold:hover { opacity: 0.88; }
+.btn-danger {
+  background: var(--vermillion);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.btn-sm {
+  background: var(--paper);
+  border: 1px solid var(--mist);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.btn-sm:hover { border-color: var(--ink-soft); }
+
+.error-msg { font-size: 13px; color: var(--vermillion); }
+.success-msg { font-size: 13px; color: var(--jade); }
+
+/* Teacher admin */
+.admin-panel { display: flex; flex-direction: column; gap: 20px; }
+.admin-section {
+  border: 1px solid var(--mist);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.admin-section-header {
+  background: var(--paper);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--mist);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-section-body { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.lesson-admin-list { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+.lesson-admin-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--paper);
+  font-size: 13px;
+}
+.lesson-admin-item .lesson-admin-zh { font-family: 'Noto Sans TC', sans-serif; font-weight: 500; flex: 1; }
+.lesson-admin-item .lesson-admin-num {
+  background: var(--vermillion);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.upload-zone {
+  border: 2px dashed var(--mist);
+  border-radius: var(--radius-sm);
+  padding: 28px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  color: var(--muted);
+  font-size: 13px;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--gold);
+  background: var(--gold-pale);
+  color: var(--gold);
+}
+.upload-zone input { display: none; }
+.upload-icon { font-size: 30px; margin-bottom: 8px; }
+
+.new-lesson-form { display: flex; flex-direction: column; gap: 12px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sans TC', Inter, sans-serif; font-size: 13px; }
+
+.tag { display: inline-flex; align-items: center; gap: 5px; background: var(--jade-pale); color: var(--jade); border-radius: 10px; padding: 2px 8px; font-size: 11px; }
+
+/* Loading spinner */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--mist);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: white;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+  z-index: 1000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Mobile */
+@media (max-width: 680px) {
+  .sidebar {
+    position: fixed;
+    top: 56px; left: 0; bottom: 0;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; }
+  .lesson-badge { display: none; }
+  .mode-tab { padding: 6px 10px; font-size: 12px; }
+  .msg-row { max-width: 88%; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menú">☰</button>
+  <div>
+    <div class="topbar-logo">來<span>！</span>學華語</div>
+    <div class="topbar-sub">Vamos a aprender mandarín</div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-teacher-btn" onclick="openTeacherModal()">🔒 Profesor</button>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Lecciones</div>
+      <input type="text" class="search-input" id="lesson-search"
+        placeholder="Buscar lección..." oninput="filterLessons(this.value)">
+    </div>
+    <div class="lesson-list" id="lesson-list"></div>
+    <div class="sidebar-footer" id="sidebar-footer">9 lecciones disponibles</div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Mode bar -->
+    <div class="mode-tabs">
+      <div class="huayecai-name">🥦 花椰菜</div>
+      <div class="mode-active-pill" id="mode-active-pill" style="display:none"></div>
+      <div class="lesson-badge" id="lesson-badge">← Elige una lección</div>
+    </div>
+
+    <!-- Messages area OR welcome state -->
+    <div id="welcome-state" class="welcome-state">
+      <div class="welcome-icon">🥦</div>
+      <div class="welcome-title">你好，我是花椰菜！</div>
+      <div class="welcome-sub">
+        Elige una lección del panel izquierdo.<br>
+        Te preguntaré qué modo quieres practicar.<br><br>
+        <span style="font-size:12px;opacity:0.7">Puedes escribir en chino, pinyin o usar el micrófono 🎙️</span>
+      </div>
+    </div>
+    <div class="messages" id="messages" style="display:none"></div>
+
+    <!-- Input area -->
+    <div class="input-area" id="input-area" style="display:none">
+      <div class="quick-chips" id="quick-chips"></div>
+      <div class="input-row">
+        <textarea class="text-input" id="text-input" rows="1"
+          placeholder="Escribe en chino o pinyin..."
+          oninput="autoResize(this)"
+          onkeydown="handleEnter(event)"></textarea>
+        <div class="btn-group">
+          <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Mantén para hablar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </button>
+          <button class="hint-btn" onclick="requestHint()">💡</button>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="voice-status" id="voice-status"></div>
+    </div>
+  </main>
+</div>
+
+<!-- TEACHER MODAL -->
+<div class="modal-overlay" id="teacher-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="font-size:20px">🔒</span>
+      <h2 id="modal-title">Acceso al panel de profesor</h2>
+      <button class="modal-close" onclick="closeTeacherModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Auth or admin panel injected here -->
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// LESSON DATA — 9 lessons from 來學華語 Book 1
+// ═══════════════════════════════════════════
+const DEFAULT_LESSONS = [
+  {
+    id: 1, zh: "您好", es: "¡Hola!", topic: "Saludos",
+    objectives: "Saludar · Decir nombre y apellido · Preguntar la nacionalidad",
+    vocab: [
+      {zh:"您",py:"nín",es:"usted (respetuoso)"},
+      {zh:"好",py:"hǎo",es:"bueno, bien"},
+      {zh:"我",py:"wǒ",es:"yo"},
+      {zh:"姓",py:"xìng",es:"apellidarse"},
+      {zh:"叫",py:"jiào",es:"llamarse"},
+      {zh:"什麼",py:"shénme",es:"qué, cómo"},
+      {zh:"名字",py:"míngzi",es:"nombre"},
+      {zh:"是",py:"shì",es:"ser"},
+      {zh:"人",py:"rén",es:"persona"},
+      {zh:"哪國人",py:"nǎ guó rén",es:"¿de qué país?"},
+      {zh:"請問",py:"qǐng wèn",es:"disculpe..."},
+      {zh:"貴姓",py:"guì xìng",es:"¿cómo se apellida usted?"},
+    ],
+    scenarios: ["Conocer a alguien nuevo en clase y presentarte formalmente",
+                "Preguntar el nombre y la nacionalidad de un compañero nuevo"],
+    grammarFocus: "我姓＿，叫＿。 ／ 您是哪國人？ ／ 是/不是",
+    quickReplies: ["您好！","我叫＿","我是美國人","請問您貴姓？"],
+  },
+  {
+    id: 2, zh: "我有兩個弟弟", es: "Tengo dos hermanos menores", topic: "Familia y números",
+    objectives: "Hablar de tu familia · Números 1–10 · Cuantificador 個",
+    vocab: [
+      {zh:"有",py:"yǒu",es:"tener, haber"},
+      {zh:"兩",py:"liǎng",es:"dos (con cuantificador)"},
+      {zh:"個",py:"gè",es:"cuantificador general"},
+      {zh:"弟弟",py:"dìdi",es:"hermano menor"},
+      {zh:"哥哥",py:"gēge",es:"hermano mayor"},
+      {zh:"姐姐",py:"jiějie",es:"hermana mayor"},
+      {zh:"妹妹",py:"mèimei",es:"hermana menor"},
+      {zh:"爸爸",py:"bàba",es:"papá"},
+      {zh:"媽媽",py:"māma",es:"mamá"},
+      {zh:"幾",py:"jǐ",es:"cuántos (menos de 10)"},
+    ],
+    scenarios: ["Describir tu familia a un amigo taiwanés que quiere conocerte mejor",
+                "Mostrar fotos de familia y presentar a cada persona"],
+    grammarFocus: "Num. + 個 + Sust. ／ 你有幾個兄弟姐妹？ ／ 沒有",
+    quickReplies: ["我有一個＿","你有幾個兄弟？","我沒有姐姐","我爸爸叫＿"],
+  },
+  {
+    id: 3, zh: "她不是學生", es: "Ella no es estudiante", topic: "Ocupaciones y negación",
+    objectives: "Hablar de profesiones · Negación con 不 · Presentar a terceros",
+    vocab: [
+      {zh:"學生",py:"xuéshēng",es:"estudiante"},
+      {zh:"老師",py:"lǎoshī",es:"profesor/a"},
+      {zh:"不",py:"bù",es:"no (negación)"},
+      {zh:"他/她",py:"tā",es:"él/ella"},
+      {zh:"也",py:"yě",es:"también"},
+      {zh:"都",py:"dōu",es:"todos, ambos"},
+      {zh:"醫生",py:"yīshēng",es:"médico/a"},
+      {zh:"這",py:"zhè",es:"este/esta"},
+      {zh:"那",py:"nà",es:"ese/aquel"},
+      {zh:"工作",py:"gōngzuò",es:"trabajar / trabajo"},
+    ],
+    scenarios: ["Hablar sobre tus compañeros de clase y sus profesiones",
+                "Corregir un malentendido sobre la profesión de alguien"],
+    grammarFocus: "是/不是 ／ 也/都 ／ 這/那 + 是 + persona",
+    quickReplies: ["她不是學生","他是醫生嗎？","我也是學生","他們都是老師"],
+  },
+  {
+    id: 4, zh: "我爸爸在電腦公司上班", es: "Mi padre trabaja en una empresa", topic: "Trabajo y lugares",
+    objectives: "Describir el trabajo · Usar 在 para ubicación · Estado: 忙/累/好",
+    vocab: [
+      {zh:"在",py:"zài",es:"estar en / en"},
+      {zh:"公司",py:"gōngsī",es:"empresa"},
+      {zh:"上班",py:"shàngbān",es:"ir a trabajar"},
+      {zh:"電腦",py:"diànnǎo",es:"computadora"},
+      {zh:"銀行",py:"yínháng",es:"banco"},
+      {zh:"學校",py:"xuéxiào",es:"escuela"},
+      {zh:"忙",py:"máng",es:"ocupado/a"},
+      {zh:"喜歡",py:"xǐhuān",es:"gustar"},
+      {zh:"但是",py:"dànshì",es:"pero"},
+      {zh:"醫院",py:"yīyuàn",es:"hospital"},
+    ],
+    scenarios: ["Hablar sobre dónde trabaja tu familia","Preguntar dónde trabaja alguien y cómo le va"],
+    grammarFocus: "在 + lugar + V. ／ V.est.: 忙/累/好 ／ 喜歡 + V.",
+    quickReplies: ["你在哪裡上班？","我爸爸在＿上班","我很忙","我喜歡我的工作"],
+  },
+  {
+    id: 5, zh: "歡迎你來", es: "¡Bienvenido!", topic: "Conocernos / Hospitalidad",
+    objectives: "Presentar a otras personas · Expresar hospitalidad · V.aux.: 想/會/可以",
+    vocab: [
+      {zh:"歡迎",py:"huānyíng",es:"bienvenido/a"},
+      {zh:"來",py:"lái",es:"venir"},
+      {zh:"去",py:"qù",es:"ir"},
+      {zh:"朋友",py:"péngyǒu",es:"amigo/a"},
+      {zh:"認識",py:"rènshi",es:"conocer (a alguien)"},
+      {zh:"很高興認識你",py:"hěn gāoxìng rènshi nǐ",es:"mucho gusto"},
+      {zh:"想",py:"xiǎng",es:"querer, pensar"},
+      {zh:"會",py:"huì",es:"saber (hacer algo)"},
+      {zh:"可以",py:"kěyǐ",es:"poder, se puede"},
+      {zh:"這是",py:"zhè shì",es:"este/a es..."},
+    ],
+    scenarios: ["Presentar a un amigo a tu familia","Recibir a un visitante en tu casa y hacerle sentir bienvenido"],
+    grammarFocus: "V.aux.: 想/會/可以 + V. ／ 很高興認識你",
+    quickReplies: ["歡迎你來！","這是我的朋友＿","很高興認識你","我想去＿"],
+  },
+  {
+    id: 6, zh: "你平常喜歡做什麼", es: "¿Qué te gusta hacer normalmente?", topic: "Pasatiempos",
+    objectives: "Hablar de hobbies · Expresar gustos · Frecuencia: 常常/有時候/很少",
+    vocab: [
+      {zh:"平常",py:"píngcháng",es:"normalmente"},
+      {zh:"聽音樂",py:"tīng yīnyuè",es:"escuchar música"},
+      {zh:"看電視",py:"kàn diànshì",es:"ver televisión"},
+      {zh:"運動",py:"yùndòng",es:"hacer deporte"},
+      {zh:"跑步",py:"pǎobù",es:"correr"},
+      {zh:"游泳",py:"yóuyǒng",es:"nadar"},
+      {zh:"常常",py:"chángcháng",es:"frecuentemente"},
+      {zh:"有時候",py:"yǒu shíhòu",es:"a veces"},
+      {zh:"不太",py:"bù tài",es:"no muy / no mucho"},
+      {zh:"很少",py:"hěn shǎo",es:"pocas veces"},
+    ],
+    scenarios: ["Preguntar a un compañero qué hace en su tiempo libre","Hablar sobre el fin de semana pasado"],
+    grammarFocus: "喜歡 + V. ／ 頻率: 常常/有時候/很少 + V.",
+    quickReplies: ["我喜歡＿","我常常＿","你平常做什麼？","我有時候游泳"],
+  },
+  {
+    id: 7, zh: "請問您是哪位", es: "¿Puedo preguntar quién es usted?", topic: "Llamadas telefónicas",
+    objectives: "Hablar por teléfono formalmente · Identificarse · Dejar mensaje",
+    vocab: [
+      {zh:"電話",py:"diànhuà",es:"teléfono"},
+      {zh:"號碼",py:"hàomǎ",es:"número"},
+      {zh:"打電話",py:"dǎ diànhuà",es:"llamar por teléfono"},
+      {zh:"哪位",py:"nǎ wèi",es:"¿quién? (formal)"},
+      {zh:"等一下",py:"děng yīxià",es:"espera un momento"},
+      {zh:"留言",py:"liú yán",es:"dejar mensaje"},
+      {zh:"不在",py:"bú zài",es:"no está"},
+      {zh:"找",py:"zhǎo",es:"buscar, llamar a"},
+      {zh:"請問",py:"qǐng wèn",es:"disculpe"},
+      {zh:"手機",py:"shǒujī",es:"teléfono móvil"},
+    ],
+    scenarios: ["Llamar a la oficina de un profesor y dejar un mensaje","Preguntar el número de teléfono de alguien"],
+    grammarFocus: "請問您是哪位？ ／ 我找＿ ／ 他不在，可以留言嗎？",
+    quickReplies: ["請問您是哪位？","我找＿老師","他在嗎？","我可以留言嗎？"],
+  },
+  {
+    id: 8, zh: "祝你生日快樂", es: "¡Feliz cumpleaños!", topic: "Cumpleaños y fechas",
+    objectives: "Decir fechas · Cumpleaños y edades · Hacer peticiones con 請",
+    vocab: [
+      {zh:"生日",py:"shēngrì",es:"cumpleaños"},
+      {zh:"快樂",py:"kuàilè",es:"feliz, alegre"},
+      {zh:"幾月",py:"jǐ yuè",es:"¿qué mes?"},
+      {zh:"幾號",py:"jǐ hào",es:"¿qué día?"},
+      {zh:"幾歲",py:"jǐ suì",es:"¿cuántos años?"},
+      {zh:"月",py:"yuè",es:"mes"},
+      {zh:"號",py:"hào",es:"día del mes"},
+      {zh:"歲",py:"suì",es:"años de edad"},
+      {zh:"請",py:"qǐng",es:"invitar, por favor"},
+      {zh:"蛋糕",py:"dàngāo",es:"pastel"},
+    ],
+    scenarios: ["Organizar la fiesta de cumpleaños de un amigo","Preguntar la fecha de cumpleaños y la edad"],
+    grammarFocus: "几月几号 ／ 几岁 ／ 請 + V. (invitación)",
+    quickReplies: ["你幾月幾號生日？","祝你生日快樂！","我今年＿歲","你幾歲？"],
+  },
+  {
+    id: 9, zh: "妳星期五有時間嗎", es: "¿Estás libre el viernes?", topic: "Planes sociales",
+    objectives: "Invitar a alguien · Hora y fechas completas · Aceptar/rechazar · 因為…所以…",
+    vocab: [
+      {zh:"星期",py:"xīngqī",es:"día de la semana"},
+      {zh:"時間",py:"shíjiān",es:"tiempo, hora"},
+      {zh:"有空",py:"yǒu kòng",es:"tener tiempo libre"},
+      {zh:"點",py:"diǎn",es:"en punto (hora)"},
+      {zh:"半",py:"bàn",es:"media (hora)"},
+      {zh:"吃飯",py:"chī fàn",es:"comer (una comida)"},
+      {zh:"一起",py:"yīqǐ",es:"juntos/as"},
+      {zh:"沒問題",py:"méi wèntí",es:"sin problema"},
+      {zh:"對不起",py:"duìbuqǐ",es:"lo siento"},
+      {zh:"因為",py:"yīnwèi",es:"porque"},
+      {zh:"所以",py:"suǒyǐ",es:"por eso"},
+    ],
+    scenarios: ["Invitar a un amigo a cenar este fin de semana","Coordinar una reunión de estudio: día, hora y lugar"],
+    grammarFocus: "星期＋几 ／ 几点几分 ／ 因為…所以… ／ 好不好？可以嗎？",
+    quickReplies: ["你星期五有空嗎？","我們幾點見？","沒問題！","對不起，我沒有空"],
+  },
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let state = {
+  lessons: [],
+  currentLessonId: null,
+  currentMode: 'scenario',
+  history: [],
+  isTyping: false,
+  isRecording: false,
+  recognition: null,
+  teacherAuthed: false,
+};
+
+function loadLessons() {
+  try {
+    const saved = localStorage.getItem('mandarin_lessons');
+    state.lessons = saved ? JSON.parse(saved) : [...DEFAULT_LESSONS];
+  } catch(e) {
+    state.lessons = [...DEFAULT_LESSONS];
+  }
+  saveLessons();
+}
+function saveLessons() {
+  localStorage.setItem('mandarin_lessons', JSON.stringify(state.lessons));
+}
+function getCurrentLesson() {
+  return state.lessons.find(l => l.id === state.currentLessonId);
+}
+
+// ═══════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════
+function renderSidebar(filter = '') {
+  const list = document.getElementById('lesson-list');
+  const footer = document.getElementById('sidebar-footer');
+  const filtered = state.lessons.filter(l =>
+    l.zh.includes(filter) || l.es.toLowerCase().includes(filter.toLowerCase()) ||
+    l.topic.toLowerCase().includes(filter.toLowerCase()) ||
+    String(l.id).includes(filter)
+  );
+  list.innerHTML = filtered.map(l => `
+    <div class="lesson-item ${l.id === state.currentLessonId ? 'active' : ''}"
+         onclick="selectLesson(${l.id})">
+      <div class="lesson-num">${l.id}</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">${l.zh}</div>
+        <div class="lesson-item-es">${l.es}</div>
+      </div>
+    </div>
+  `).join('');
+  footer.textContent = `${state.lessons.length} lecciones disponibles`;
+}
+function filterLessons(v) { renderSidebar(v); }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebarMobile() {
+  if (window.innerWidth <= 680) document.getElementById('sidebar').classList.remove('open');
+}
+
+// ═══════════════════════════════════════
+// SELECT LESSON & MODE
+// ═══════════════════════════════════════
+function selectLesson(id) {
+  state.currentLessonId = id;
+  state.currentMode = null;
+  state.history = [];
+  state.exchangeCount = 0;
+  renderSidebar();
+  closeSidebarMobile();
+  const L = getCurrentLesson();
+  document.getElementById('lesson-badge').textContent = `第${L.id}課 · ${L.zh} · ${L.topic}`;
+  document.getElementById('welcome-state').style.display = 'none';
+  document.getElementById('messages').style.display = 'flex';
+  document.getElementById('input-area').style.display = 'block';
+  renderQuickChips([]);
+
+  // Reset mode pill
+  const pill = document.getElementById('mode-active-pill');
+  if (pill) pill.style.display = 'none';
+
+  // Show 花椰菜 greeting + mode selector
+  document.getElementById('messages').innerHTML = '';
+  appendHuayecaiGreeting(L);
+}
+
+function appendHuayecaiGreeting(L) {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+  row.innerHTML = `
+    <div class="msg-avatar">🥦</div>
+    <div class="msg-body">
+      <div class="bubble">
+        <div class="bubble-zh">你好，我是花椰菜！</div>
+        <div class="bubble-py">(Nǐhǎo, wǒ shì Huāyécài!)</div>
+      </div>
+      <div class="box-context" style="margin-top:8px">
+        <strong>Lección ${L.id}: ${L.zh} — ${L.es}</strong><br>
+        ¿Qué modo quieres practicar hoy?
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="t-btn" style="background:var(--ink);border:none;border-radius:16px;padding:6px 16px;color:white;font-size:13px;font-weight:600;cursor:pointer" onclick="chooseMode('A')">🤖 A — IA pregunta</button>
+          <button class="t-btn" style="background:var(--jade);border:none;border-radius:16px;padding:6px 16px;color:white;font-size:13px;font-weight:600;cursor:pointer" onclick="chooseMode('B')">🎭 B — Conversación</button>
+          <button class="t-btn" style="background:var(--vermillion);border:none;border-radius:16px;padding:6px 16px;color:white;font-size:13px;font-weight:600;cursor:pointer" onclick="chooseMode('C')">🙋 C — Yo pregunto</button>
+        </div>
+      </div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function chooseMode(mode) {
+  switchMode(mode);
+}
+
+function switchMode(mode) {
+  state.currentMode = mode;
+  const labels = { 'A':'🤖 Modo A', 'B':'🎭 Modo B', 'C':'🙋 Modo C' };
+  const pill = document.getElementById('mode-active-pill');
+  if (pill) {
+    pill.textContent = labels[mode] || mode;
+    pill.style.display = 'block';
+  }
+  if (state.currentLessonId) {
+    state.history = [];
+    document.getElementById('messages').innerHTML = '';
+    startConversation();
+  }
+}
+
+// ═══════════════════════════════════════
+// SYSTEM PROMPT BUILDER
+// ═══════════════════════════════════════
+
+const ALWAYS_ALLOWED = [
+  "是","不","沒","嗎","呢","啊","喔","嗯","哦","吧",
+  "我","你","您","他","她","它","我們","你們","他們",
+  "這","那","的","地","得","了","著","過",
+  "也","都","很","太","最","真","非常","一點",
+  "和","跟","與","但","可是","因為","所以","如果",
+  "在","有","沒有","不是","有沒有",
+  "什麼","誰","哪","哪裡","哪兒","怎麼","為什麼","多少","幾",
+  "一","二","三","四","五","六","七","八","九","十","百","千","萬","兩",
+  "個","次","本","張","杯","碗","件","條",
+  "嗨","喂","哈","好的","好","謝謝","不客氣","對","不對","對不起","沒關係",
+  "請","請問","再","又","還","就","才","先","已經","還是","或者",
+  "大","小","多","少","新","舊","高","低","快","慢","早","晚",
+  "上","下","裡","外","前","後","左","右","中","旁邊",
+  "今天","明天","昨天","現在","以前","以後","時候",
+];
+
+function getCumulativeVocab(targetLesson) {
+  const seen = new Set();
+  const vocab = [];
+  for (const lesson of state.lessons.filter(l => l.id <= targetLesson.id).sort((a,b) => a.id-b.id)) {
+    for (const v of (lesson.vocab || [])) {
+      if (!seen.has(v.zh)) { seen.add(v.zh); vocab.push({ ...v, fromLesson: lesson.id }); }
+    }
+  }
+  return vocab;
+}
+
+function buildSystemPrompt(L) {
+  const mode = state.currentMode;
+  const cumVocab = getCumulativeVocab(L);
+
+  const vocabByLesson = {};
+  for (const v of cumVocab) {
+    if (!vocabByLesson[v.fromLesson]) vocabByLesson[v.fromLesson] = [];
+    vocabByLesson[v.fromLesson].push(`${v.zh}(${v.py})=${v.es}`);
+  }
+  const vocabBlock = Object.entries(vocabByLesson)
+    .map(([lid, words]) => `  第${lid}課: ${words.join(' · ')}`)
+    .join('\n');
+
+  const currentVocabStr = L.vocab.map(v => v.zh).join('、');
+  const alwaysStr = ALWAYS_ALLOWED.join('、');
+
+  const modeInstr = {
+    'A': `MODE A — IA pregunta, estudiante responde:
+Haz UNA pregunta corta en mandarín sobre el tema "${L.topic}" usando el vocabulario permitido.
+Evalúa la respuesta del estudiante. Si hay error gramatical, añade 🛠️ Sugerencia box.
+Si es correcta, añade ✓ ¡Muy bien! y haz la siguiente pregunta.
+Varía entre preguntas de 嗎 y pronombres interrogativos (什麼、哪、誰、幾).
+Después de 5-7 intercambios exitosos, añade el bloque de transición.`,
+
+    'B': `MODE B — Conversación del tema (situación real):
+Crea una situación original inspirada en el tema "${L.topic}" (NO copies el libro textualmente).
+Escenario sugerido: "${L.scenarios[0]}"
+Inicia directamente con UNA frase corta en mandarín. No expliques el escenario en chino.
+Al final de CADA mensaje tuyo añade SIEMPRE:
+🌍 Contexto: [descripción breve en español de la situación y qué debería decir el estudiante a continuación]
+Después de 5-7 intercambios exitosos, añade el bloque de transición.`,
+
+    'C': `MODE C — Estudiante pregunta, IA responde:
+Actúas como interlocutor nativo. Espera las preguntas del estudiante.
+Si el estudiante no sabe cómo preguntar, dale una pista de estructura en el 💡 box.
+Si el estudiante escribe en español, anímale a intentarlo en chino con la estructura correcta.
+Responde con frases cortas y naturales usando SOLO vocabulario permitido.
+Después de 5-7 intercambios exitosos, añade el bloque de transición.`,
+  };
+
+  const transitionInstr = `BLOQUE DE TRANSICIÓN (añadir después de 5-7 intercambios exitosos o cuando concluye un roleplay):
+Añade este texto al final de tu mensaje:
+---TRANSITION---
+¡Excelente trabajo! Ya practicamos bastante esta parte. ¿Quieres continuar, cambiar de modo o cambiar de lección?
+[MODO A] [MODO B] [MODO C] [CAMBIAR LECCIÓN]
+---END_TRANSITION---`;
+
+  return `Eres 花椰菜 (Huāyécài), una profesora de mandarín taiwanés paciente y motivadora.
+NO eres un asistente de IA. Mantén el personaje siempre.
+Tus estudiantes son hispanohablantes universitarios con 4 meses de estudio.
+
+LECCIÓN ACTIVA: Lección ${L.id} — "${L.zh}" (${L.es})
+TEMA: ${L.topic} · GRAMÁTICA: ${L.grammarFocus}
+VOCABULARIO DE ESTA LECCIÓN (énfasis aquí): ${currentVocabStr}
+
+════════════════════════════════
+VOCABULARIO PERMITIDO — L1 A L${L.id}
+(ÚNICO vocabulario chino que puedes usar activamente)
+════════════════════════════════
+${vocabBlock}
+
+PALABRAS FUNCIONALES SIEMPRE PERMITIDAS:
+${alwaysStr}
+
+════════════════════════════════
+REGLA LÉXICA (CORE DIRECTIVE)
+════════════════════════════════
+✅ Usa: vocabulario de L1–L${L.id} + palabras funcionales.
+✅ LEGO RULE: si el estudiante usa correctamente una palabra fuera del syllabus, puedes usarla también en tu siguiente respuesta.
+❌ PROHIBIDO: cualquier otra palabra china fuera de esas listas. Si necesitas el concepto, reformula.
+→ Si el estudiante niega un hecho (e.g. "no soy de México"), pregunta por la información correcta.
+
+SOBRE INPUT DEL ESTUDIANTE:
+- Palabras fuera del syllabus → acéptalas, continúa con vocabulario permitido.
+- Solo corrige errores GRAMATICALES o USO INCORRECTO de palabras del syllabus.
+
+${modeInstr[mode]}
+
+${transitionInstr}
+
+════════════════════════════════
+FORMATO DE RESPUESTA — Voice-First (TTS)
+════════════════════════════════
+La parte principal del mensaje: SOLO chino tradicional + pinyin. NUNCA español aquí.
+
+[Frase en caracteres tradicionales]
+([Pīnyīn con tonos])
+
+Los metadatos van SOLO en estas cajas especiales al final:
+
+🌍 Contexto: [solo en Mode B — escena en español]
+💡 Traducción: [solo si el estudiante pide ayuda: "No entiendo", "Help", "¿Qué?"]
+🛠️ Sugerencia: [si hay error] — Decimos: [frase correcta en chino]. ¿Puedes intentar decir la frase correcta?
+
+Frases máx. 12 caracteres. Caracteres TRADICIONALES siempre (學 no 学, 說 no 说).`;
+}
+
+// ═══════════════════════════════════════
+// CONVERSATION FLOW
+// ═══════════════════════════════════════
+async function startConversation() {
+  const L = getCurrentLesson();
+  if (!L) return;
+  state.exchangeCount = 0;
+  const sys = buildSystemPrompt(L);
+  setTyping(true);
+
+  const modeNote = {
+    'A': '🤖 Modo A — IA pregunta, tú respondes',
+    'B': '🎭 Modo B — Conversación del tema',
+    'C': '🙋 Modo C — Tú preguntas, IA responde',
+  };
+  addSystemNote(modeNote[state.currentMode] || '');
+
+  const openingPrompt = {
+    'A': `Empieza el Modo A ahora. Haz tu primera pregunta al estudiante sobre el tema "${L.topic}".`,
+    'B': `Empieza el Modo B ahora. Inicia la situación directamente con una frase corta en chino. Recuerda añadir el 🌍 Contexto box al final.`,
+    'C': `Empieza el Modo C ahora. Saluda brevemente al estudiante en chino e invítale a hacerte preguntas sobre "${L.topic}".`,
+  };
+
+  const reply = await callClaude(sys, openingPrompt[state.currentMode] || openingPrompt['A'], true);
+  setTyping(false);
+  appendAIMessage(reply);
+}
+
+async function sendMessage() {
+  const input = document.getElementById('text-input');
+  const text = input.value.trim();
+  if (!text || state.isTyping) return;
+  input.value = '';
+  input.style.height = 'auto';
+  const L = getCurrentLesson();
+  if (!L) return;
+
+  appendUserMessage(text);
+  state.exchangeCount = (state.exchangeCount || 0) + 1;
+
+  const sys = buildSystemPrompt(L);
+  setTyping(true);
+  const reply = await callClaude(sys, text, false);
+  setTyping(false);
+  appendAIMessage(reply);
+}
+
+async function requestHint() {
+  const L = getCurrentLesson();
+  if (!L || state.isTyping) return;
+  const sys = buildSystemPrompt(L);
+  setTyping(true);
+  const reply = await callClaude(sys, '💡 El estudiante pide ayuda. Activa el Help Box: muestra la traducción al español de tu último mensaje, y ofrece una frase de ejemplo que pueda usar.', false);
+  setTyping(false);
+  appendAIMessage(reply, true);
+}
+
+// ═══════════════════════════════════════
+// CLAUDE API
+// ═══════════════════════════════════════
+async function callClaude(systemPrompt, userMessage, isOpening = false) {
+  if (!isOpening) {
+    state.history.push({ role: 'user', content: userMessage });
+  }
+  const messages = isOpening
+    ? [{ role: 'user', content: userMessage }]
+    : state.history;
+
+  const apiKey = localStorage.getItem('mandarin_api_key');
+  if (!apiKey) {
+    openTeacherModal();
+    return '⚠️ Falta la API key. Introdúcela en el panel del profesor (botón 🔒 arriba a la derecha).';
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages,
+      }),
+    });
+    const data = await res.json();
+    if (data.error) return `Error: ${data.error.message}`;
+    const text = data.content?.map(b => b.text || '').join('') || 'Error al conectar.';
+    if (isOpening) {
+      state.history = [
+        { role: 'user', content: userMessage },
+        { role: 'assistant', content: text },
+      ];
+    } else {
+      state.history.push({ role: 'assistant', content: text });
+    }
+    return text;
+  } catch(e) {
+    return 'Error de conexión. Por favor intenta de nuevo.';
+  }
+}
+
+// ═══════════════════════════════════════
+// MESSAGE RENDERING
+// ═══════════════════════════════════════
+
+function parseAIText(raw) {
+  // Split on transition block
+  let mainRaw = raw, transitionText = null;
+  const transMatch = raw.match(/---TRANSITION---([\s\S]*?)---END_TRANSITION---/);
+  if (transMatch) {
+    transitionText = transMatch[1].trim();
+    mainRaw = raw.replace(/---TRANSITION---[\s\S]*?---END_TRANSITION---/, '').trim();
+  }
+
+  // Extract meta-boxes
+  let contextBox = '', helpBox = '', correctionBox = '', praise = false;
+  mainRaw = mainRaw.replace(/🌍\s*Contexto:\s*([^\n🛠💡]*)/g, (_, c) => { contextBox = c.trim(); return ''; });
+  mainRaw = mainRaw.replace(/💡\s*Traducción:\s*([^\n🛠🌍]*)/g, (_, c) => { helpBox = c.trim(); return ''; });
+  mainRaw = mainRaw.replace(/🛠️?\s*Sugerencia:\s*([^\n🌍💡]*)/g, (_, c) => { correctionBox = c.trim(); return ''; });
+  if (mainRaw.includes('✓') || mainRaw.includes('¡Muy bien')) { praise = true; }
+  mainRaw = mainRaw.replace(/✓.*¡Muy bien[^\n]*/g, '').trim();
+
+  // Parse main Chinese + pinyin lines
+  const lines = mainRaw.split('\n').map(l => l.trim()).filter(Boolean);
+  const dialogueLines = [];
+  for (const line of lines) {
+    if (line.match(/[\u4e00-\u9fff]/) || (line.startsWith('(') && line.endsWith(')'))) {
+      dialogueLines.push(line);
+    }
+  }
+
+  return { dialogueLines, contextBox, helpBox, correctionBox, praise, transitionText };
+}
+
+function renderDialogueLines(lines) {
+  let html = '';
+  for (const line of lines) {
+    if (line.startsWith('(') && line.endsWith(')')) {
+      html += `<div class="bubble-py">${line.slice(1,-1)}</div>`;
+    } else {
+      html += `<div class="bubble-zh">${line}</div>`;
+    }
+  }
+  return html;
+}
+
+function appendAIMessage(raw, isHint = false) {
+  const parsed = parseAIText(raw);
+  const msgs = document.getElementById('messages');
+
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+
+  const mainContent = parsed.dialogueLines.length
+    ? renderDialogueLines(parsed.dialogueLines)
+    : `<div class="bubble-zh" style="font-size:14px">${raw.replace(/\n/g,'<br>')}</div>`;
+
+  row.innerHTML = `
+    <div class="msg-avatar">${isHint ? '💡' : '🥦'}</div>
+    <div class="msg-body">
+      <div class="bubble">${mainContent}</div>
+      ${parsed.praise ? `<div class="praise-badge">✓ ¡Muy bien!</div>` : ''}
+      ${parsed.contextBox ? `<div class="box-context"><strong>🌍 Contexto:</strong> ${parsed.contextBox}</div>` : ''}
+      ${parsed.helpBox ? `<div class="box-help"><strong>💡 Traducción:</strong> ${parsed.helpBox}</div>` : ''}
+      ${parsed.correctionBox ? `<div class="box-correction"><strong>🛠️ Sugerencia:</strong> ${parsed.correctionBox}</div>` : ''}
+      ${parsed.transitionText ? renderTransitionCard(parsed.transitionText) : ''}
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function renderTransitionCard(text) {
+  const L = getCurrentLesson();
+  return `<div class="transition-card">
+    <div>${text.split('\n')[0]}</div>
+    <div class="t-btns">
+      <button class="t-btn" onclick="chooseMode('A')">🤖 Modo A</button>
+      <button class="t-btn" onclick="chooseMode('B')">🎭 Modo B</button>
+      <button class="t-btn" onclick="chooseMode('C')">🙋 Modo C</button>
+      <button class="t-btn" style="background:var(--muted)" onclick="appendHuayecaiGreeting(getCurrentLesson())">🔄 Cambiar lección</button>
+    </div>
+  </div>`;
+}
+
+function appendUserMessage(text) {
+  const msgs = document.getElementById('messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+  row.innerHTML = `
+    <div class="msg-avatar">👤</div>
+    <div class="msg-body">
+      <div class="bubble"><div class="bubble-zh">${text}</div></div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addSystemNote(text) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.style.cssText = 'text-align:center;font-size:12px;color:var(--muted);padding:4px 0 8px;';
+  div.textContent = text;
+  msgs.appendChild(div);
+}
+
+function setTyping(on) {
+  state.isTyping = on;
+  document.getElementById('send-btn').disabled = on;
+  const msgs = document.getElementById('messages');
+  const existing = document.getElementById('typing-indicator');
+  if (on && !existing) {
+    const row = document.createElement('div');
+    row.id = 'typing-indicator';
+    row.className = 'typing-row';
+    row.innerHTML = `
+      <div class="msg-avatar" style="width:36px;height:36px;background:var(--paper-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;">🥦</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+      </div>
+    `;
+    msgs.appendChild(row);
+    msgs.scrollTop = msgs.scrollHeight;
+  } else if (!on && existing) {
+    existing.remove();
+  }
+}
+
+function renderQuickChips(chips) {
+  const container = document.getElementById('quick-chips');
+  container.innerHTML = chips.map(c =>
+    `<button class="chip" onclick="useChip('${c.replace(/'/g,"\\'")}')">${c}</button>`
+  ).join('');
+}
+function useChip(text) {
+  document.getElementById('text-input').value = text;
+  document.getElementById('text-input').focus();
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+function handleEnter(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+// ═══════════════════════════════════════
+// VOICE INPUT
+// ═══════════════════════════════════════
+function setupVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    document.getElementById('voice-btn').title = 'Tu navegador no soporta reconocimiento de voz';
+    document.getElementById('voice-btn').style.opacity = '0.4';
+    return;
+  }
+  state.recognition = new SpeechRecognition();
+  state.recognition.lang = 'zh-TW';
+  state.recognition.continuous = false;
+  state.recognition.interimResults = true;
+
+  state.recognition.onstart = () => {
+    state.isRecording = true;
+    document.getElementById('voice-btn').classList.add('recording');
+    document.getElementById('voice-status').textContent = '🔴 Escuchando... habla ahora';
+  };
+  state.recognition.onresult = (e) => {
+    const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+    document.getElementById('text-input').value = transcript;
+    autoResize(document.getElementById('text-input'));
+    if (e.results[e.results.length - 1].isFinal) {
+      document.getElementById('voice-status').textContent = '✓ Capturado: ' + transcript;
+    }
+  };
+  state.recognition.onerror = (e) => {
+    document.getElementById('voice-status').textContent = 'Error: ' + e.error;
+    stopVoice();
+  };
+  state.recognition.onend = () => stopVoice();
+}
+
+function toggleVoice() {
+  if (!state.recognition) return;
+  if (state.isRecording) {
+    state.recognition.stop();
+  } else {
+    try { state.recognition.start(); }
+    catch(e) { showToast('Activa el micrófono en tu navegador'); }
+  }
+}
+function stopVoice() {
+  state.isRecording = false;
+  document.getElementById('voice-btn').classList.remove('recording');
+  setTimeout(() => { document.getElementById('voice-status').textContent = ''; }, 3000);
+}
+
+// ═══════════════════════════════════════
+// TEACHER MODAL
+// ═══════════════════════════════════════
+const TEACHER_PASS = 'mandarin2026';
+
+function openTeacherModal() {
+  document.getElementById('teacher-modal').classList.add('open');
+  if (state.teacherAuthed) renderAdminPanel();
+  else renderAuthGate();
+}
+function closeTeacherModal() {
+  document.getElementById('teacher-modal').classList.remove('open');
+}
+
+function renderAuthGate() {
+  document.getElementById('modal-title').textContent = 'Acceso al panel de profesor';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="auth-gate">
+      <h3>Panel de profesor 👩‍🏫</h3>
+      <p>Introduce la contraseña para acceder y gestionar las lecciones del curso.</p>
+      <div>
+        <div class="field-label">Contraseña</div>
+        <input type="password" class="field-input" id="pass-input"
+          placeholder="Contraseña del profesor"
+          onkeydown="if(event.key==='Enter') checkPass()">
+        <div class="error-msg" id="pass-error" style="margin-top:6px"></div>
+      </div>
+      <button class="btn-primary" onclick="checkPass()">Entrar →</button>
+    </div>
+  `;
+}
+
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  const msg = document.getElementById('api-key-msg');
+  if (!val.startsWith('sk-ant-')) {
+    msg.innerHTML = '<span style="color:var(--vermillion)">⚠️ El key debe empezar con sk-ant-</span>';
+    return;
+  }
+  localStorage.setItem('mandarin_api_key', val);
+  msg.innerHTML = '<span style="color:var(--jade)">✅ Guardado correctamente. Ya puedes cerrar este panel y practicar.</span>';
+}
+
+function checkPass() {
+  const val = document.getElementById('pass-input').value;
+  if (val === TEACHER_PASS) {
+    state.teacherAuthed = true;
+    renderAdminPanel();
+  } else {
+    document.getElementById('pass-error').textContent = 'Contraseña incorrecta.';
+  }
+}
+
+function renderAdminPanel() {
+  document.getElementById('modal-title').textContent = 'Panel del profesor';
+  const lessons = state.lessons;
+  const savedKey = localStorage.getItem('mandarin_api_key') || '';
+  const keyPreview = savedKey ? '✅ API key guardada (' + savedKey.slice(0,12) + '...)' : '❌ Sin API key';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="admin-panel">
+
+      <!-- API KEY -->
+      <div class="admin-section">
+        <div class="admin-section-header">🔑 API Key de Anthropic <span style="margin-left:auto;font-size:11px;color:var(--jade)">${keyPreview}</span></div>
+        <div class="admin-section-body">
+          <p style="font-size:13px;color:var(--muted)">Introduce tu API key de Anthropic. Se guarda solo en este navegador, nadie más puede verla.</p>
+          <div style="display:flex;gap:8px">
+            <input type="password" class="field-input" id="api-key-input"
+              placeholder="sk-ant-..."
+              value="${savedKey}"
+              style="flex:1;font-family:monospace;font-size:13px">
+            <button class="btn-gold" onclick="saveApiKey()">Guardar</button>
+          </div>
+          <div id="api-key-msg" style="font-size:12px;margin-top:6px"></div>
+        </div>
+      </div>
+
+      <!-- Current lessons list -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          📚 Lecciones actuales <span style="margin-left:auto;font-weight:400;color:var(--muted)">${lessons.length} en total</span>
+        </div>
+        <div class="admin-section-body">
+          <div class="lesson-admin-list">
+            ${lessons.map(l => `
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第${l.id}課</div>
+                <div class="lesson-admin-zh">${l.zh} — ${l.es}</div>
+                <div style="font-size:11px;color:var(--muted)">${l.vocab.length} palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(${l.id})">✏️ Editar</button>
+                ${l.id > 9 ? `<button class="btn-danger" onclick="deleteLesson(${l.id})">✕</button>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload PDF -->
+      <div class="admin-section">
+        <div class="admin-section-header">📄 Subir PDF de nueva lección</div>
+        <div class="admin-section-body">
+          <p style="font-size:13px;color:var(--muted)">Sube el PDF de una lección. El AI extraerá el vocabulario y los objetivos automáticamente.</p>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('pdf-input').click()"
+            ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <input type="file" id="pdf-input" accept=".pdf" onchange="handlePDFUpload(this.files[0])">
+            <div class="upload-icon">📂</div>
+            <div>Haz clic o arrastra un PDF aquí</div>
+            <div style="font-size:11px;margin-top:4px;opacity:0.7">Formatos: .pdf · Máx 10MB</div>
+          </div>
+          <div id="upload-status"></div>
+        </div>
+      </div>
+
+      <!-- Manual lesson input -->
+      <div class="admin-section">
+        <div class="admin-section-header">✏️ Añadir nueva lección</div>
+        <div class="admin-section-body">
+          <div class="new-lesson-form">
+            <div class="two-col">
+              <div>
+                <div class="field-label">Título en chino 漢字</div>
+                <input class="field-input" id="new-zh" placeholder="e.g. 我餓了"
+                  style="font-family:'Noto Sans TC',sans-serif;font-size:16px">
+              </div>
+              <div>
+                <div class="field-label">Título en español</div>
+                <input class="field-input" id="new-es" placeholder="e.g. Tengo hambre">
+              </div>
+            </div>
+            <div class="two-col">
+              <div>
+                <div class="field-label">Tema</div>
+                <input class="field-input" id="new-topic" placeholder="e.g. Comida y restaurantes">
+              </div>
+              <div>
+                <div class="field-label">Gramática clave</div>
+                <input class="field-input" id="new-grammar" placeholder="e.g. 我想吃＿">
+              </div>
+            </div>
+            <div>
+              <div class="field-label">Objetivos de aprendizaje</div>
+              <input class="field-input" id="new-obj" placeholder="e.g. Pedir comida · Expresar preferencias">
+            </div>
+            <div>
+              <div class="field-label">
+                Vocabulario — escribe solo los caracteres chinos, uno por línea
+              </div>
+              <textarea class="field-input" id="new-vocab-raw" rows="6"
+                style="font-family:'Noto Sans TC',sans-serif;font-size:16px;line-height:2"
+                placeholder="餓&#10;飽&#10;好吃&#10;點菜&#10;餐廳"></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+                <button class="btn-gold" onclick="generateNewVocabAI()" id="gen-new-vocab-btn">
+                  ✨ Generar pinyin y traducción con AI
+                </button>
+                <span id="gen-new-vocab-status" style="font-size:12px;color:var(--muted)"></span>
+              </div>
+              <div id="new-vocab-preview" style="margin-top:10px"></div>
+            </div>
+            <div>
+              <div class="field-label">Situaciones de práctica (una por línea)</div>
+              <textarea class="field-input" id="new-scenarios" rows="2"
+                placeholder="Pedir comida en un restaurante taiwanés&#10;Decirle a un amigo qué comida te gusta"></textarea>
+            </div>
+            <div id="new-lesson-msg"></div>
+            <button class="btn-gold" onclick="addLessonManually()">＋ Añadir lección al sitio</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export & Reset -->
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:4px">
+        <button class="btn-gold" onclick="exportHTML()" style="width:100%;padding:12px">
+          💾 下載目前設定（儲存我的修改）
+        </button>
+        <div style="text-align:center">
+          <button class="btn-sm" onclick="resetToDefaults()">↺ Restaurar lecciones originales (1–9)</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') handlePDFUpload(file);
+}
+
+async function handlePDFUpload(file) {
+  if (!file) return;
+  const status = document.getElementById('upload-status');
+  status.innerHTML = `<div style="font-size:13px;color:var(--muted);margin-top:8px"><span class="spinner"></span> Procesando PDF con AI... esto puede tardar 30s</div>`;
+
+  try {
+    const base64 = await fileToBase64(file);
+    const nextId = Math.max(...state.lessons.map(l => l.id)) + 1;
+
+    const apiKey = localStorage.getItem('mandarin_api_key') || '';
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+            { type: 'text', text: `Analiza este documento de lección de mandarín taiwanés y responde SOLO con JSON válido (sin backticks, sin preamble):
+{
+  "zh": "título en chino tradicional",
+  "es": "título en español",
+  "topic": "tema en español (2-4 palabras)",
+  "objectives": "objetivos de aprendizaje separados por · ",
+  "vocab": [{"zh":"字","py":"pīnyīn","es":"español"}, ...],
+  "scenarios": ["situación 1", "situación 2"],
+  "grammarFocus": "puntos gramaticales clave",
+  "quickReplies": ["frase1en中文", "frase2"]
+}
+Extrae máximo 12 palabras de vocabulario clave. Caracteres tradicionales siempre.` }
+          ]
+        }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.map(b => b.text || '').join('') || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    parsed.id = nextId;
+
+    state.lessons.push(parsed);
+    saveLessons();
+    renderSidebar();
+    status.innerHTML = `<div class="success-msg" style="margin-top:8px">✓ Lección "${parsed.zh}" añadida como lección ${nextId}.</div>`;
+    showToast(`✓ Nueva lección añadida: ${parsed.zh}`);
+  } catch(e) {
+    status.innerHTML = `<div class="error-msg" style="margin-top:8px">Error al procesar el PDF. Intenta añadirla manualmente.</div>`;
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function generateNewVocabAI() {
+  const rawEl = document.getElementById('new-vocab-raw');
+  const statusEl = document.getElementById('gen-new-vocab-status');
+  const previewEl = document.getElementById('new-vocab-preview');
+  const btn = document.getElementById('gen-new-vocab-btn');
+
+  const chars = rawEl.value.trim().split('\n').map(l => l.trim()).filter(Boolean);
+  if (chars.length === 0) {
+    statusEl.textContent = '⚠️ Escribe al menos un carácter primero.';
+    return;
+  }
+  const apiKey = localStorage.getItem('mandarin_api_key');
+  if (!apiKey) { statusEl.textContent = '⚠️ Necesitas API key.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando...';
+  statusEl.textContent = '';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 1000,
+        messages: [{ role: 'user', content:
+          `Para cada palabra china de mandarín taiwanés, da el pīnyīn con tonos y traducción al español. SOLO JSON sin backticks:\n\nPalabras: ${chars.join(', ')}\n\n[{"zh":"字","py":"pīnyīn","es":"español"}]`
+        }]
+      })
+    });
+    const data = await res.json();
+    const vocab = JSON.parse(data.content?.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim());
+    window._pendingNewVocab = vocab;
+
+    previewEl.innerHTML = `
+      <div style="font-size:12px;color:var(--jade);margin-bottom:8px">✅ ${vocab.length} palabras generadas.</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--paper)">
+          <th style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif">漢字</th>
+          <th style="padding:6px 10px;border:1px solid var(--mist)">Pīnyīn</th>
+          <th style="padding:6px 10px;border:1px solid var(--mist)">Español</th>
+        </tr></thead>
+        <tbody>${vocab.map((v,i)=>`
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">${v.zh}</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)"
+                value="${v.py}" onchange="window._pendingNewVocab[${i}].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%"
+                value="${v.es}" onchange="window._pendingNewVocab[${i}].es=this.value">
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch(e) {
+    statusEl.innerHTML = `<span style="color:var(--vermillion)">Error: ${e.message}</span>`;
+  }
+  btn.disabled = false;
+  btn.textContent = '✨ Generar pinyin y traducción con AI';
+}
+
+function addLessonManually() {
+  const zh = document.getElementById('new-zh').value.trim();
+  const es = document.getElementById('new-es').value.trim();
+  const topic = document.getElementById('new-topic').value.trim();
+  const obj = document.getElementById('new-obj').value.trim();
+  const scenariosRaw = document.getElementById('new-scenarios').value.trim();
+  const grammar = document.getElementById('new-grammar').value.trim();
+  const msgEl = document.getElementById('new-lesson-msg');
+
+  if (!zh || !es || !topic) {
+    msgEl.innerHTML = `<div class="error-msg">Por favor rellena: título chino, español y tema.</div>`;
+    return;
+  }
+
+  const vocab = window._pendingNewVocab || [];
+  if (vocab.length === 0) {
+    msgEl.innerHTML = `<div class="error-msg">⚠️ Genera el vocabulario con AI primero.</div>`;
+    return;
+  }
+
+  const scenarios = scenariosRaw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const nextId = Math.max(...state.lessons.map(l=>l.id)) + 1;
+  const lesson = {
+    id: nextId, zh, es, topic,
+    objectives: obj,
+    vocab,
+    scenarios: scenarios.length ? scenarios : [`Practicar el tema: ${topic}`],
+    grammarFocus: grammar || '',
+    quickReplies: vocab.slice(0,4).map(v=>v.zh),
+  };
+
+  state.lessons.push(lesson);
+  saveLessons();
+  renderSidebar();
+  window._pendingNewVocab = null;
+  msgEl.innerHTML = `<div class="success-msg">✅ Lección ${nextId} "${zh}" añadida. Recuerda pulsar 💾 下載 para guardar.</div>`;
+  ['new-zh','new-es','new-topic','new-obj','new-scenarios','new-grammar','new-vocab-raw']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('new-vocab-preview').innerHTML = '';
+}
+
+function deleteLesson(id) {
+  if (!confirm(`¿Eliminar la lección ${id}?`)) return;
+  state.lessons = state.lessons.filter(l => l.id !== id);
+  if (state.currentLessonId === id) state.currentLessonId = null;
+  saveLessons();
+  renderSidebar();
+  renderAdminPanel();
+  showToast('Lección eliminada');
+}
+
+function resetToDefaults() {
+  if (!confirm('¿Restaurar solo las lecciones originales 1–9? Se eliminarán las personalizadas.')) return;
+  state.lessons = [...DEFAULT_LESSONS];
+  saveLessons();
+  renderSidebar();
+  renderAdminPanel();
+  showToast('Lecciones restauradas');
+}
+
+// ═══════════════════════════════════════
+// EXPORT HTML WITH CURRENT LESSONS BAKED IN
+// ═══════════════════════════════════════
+function exportHTML() {
+  const lessonsJSON = JSON.stringify(state.lessons);
+
+  // Fetch the original HTML source as text (works both locally and on CodePen)
+  const source = document.documentElement.outerHTML;
+
+  // Strategy: inject lessons as a script tag right before </body>
+  // Remove any previously injected export tag first
+  let cleaned = source.replace(/<!--EXPORT_DATA-->[\s\S]*?<!--\/EXPORT_DATA-->/g, '');
+
+  // Inject current lessons right before </body>
+  const injection = `<!--EXPORT_DATA--><script>
+(function(){
+  var exported = ${lessonsJSON};
+  var orig = window.loadLessons;
+  window.loadLessons = function(){
+    try {
+      var saved = localStorage.getItem('mandarin_lessons');
+      if (!saved) {
+        state.lessons = exported;
+        saveLessons();
+      } else {
+        state.lessons = JSON.parse(saved);
+      }
+    } catch(e) {
+      state.lessons = exported;
+    }
+  };
+})();
+<\/script><!--/EXPORT_DATA-->`;
+
+  const finalHTML = cleaned.replace('</body>', injection + '</body>');
+
+  const blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '來學華語_對話練習_' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ 下載完成！把這個新版本貼到 CodePen 就會包含你的修改。');
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════
+// LESSON EDITOR
+// ═══════════════════════════════════════
+function openLessonEditor(id) {
+  const L = state.lessons.find(l => l.id === id);
+  if (!L) return;
+
+  // Build vocab string: one per line "漢字 pinyin = español"
+  const vocabStr = L.vocab.map(v => `${v.zh} ${v.py} = ${v.es}`).join('\n');
+  const scenariosStr = (L.scenarios || []).join('\n');
+  const quickStr = (L.quickReplies || []).join('\n');
+
+  document.getElementById('modal-title').textContent = `✏️ Editar Lección ${L.id}`;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="new-lesson-form">
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <button class="btn-sm" onclick="renderAdminPanel()">← Volver al panel</button>
+        <span style="font-size:13px;color:var(--muted)">第${L.id}課</span>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="field-label">Título en chino 漢字</div>
+          <input class="field-input" id="edit-zh" value="${L.zh}"
+            style="font-family:'Noto Sans TC',sans-serif;font-size:16px">
+        </div>
+        <div>
+          <div class="field-label">Título en español</div>
+          <input class="field-input" id="edit-es" value="${L.es}">
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="field-label">Tema</div>
+          <input class="field-input" id="edit-topic" value="${L.topic || ''}">
+        </div>
+        <div>
+          <div class="field-label">Gramática clave</div>
+          <input class="field-input" id="edit-grammar" value="${L.grammarFocus || ''}">
+        </div>
+      </div>
+
+      <div>
+        <div class="field-label">Objetivos de aprendizaje</div>
+        <input class="field-input" id="edit-obj" value="${L.objectives || ''}">
+      </div>
+
+      <div>
+        <div class="field-label">
+          Vocabulario
+          <span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:8px">— escribe solo los caracteres chinos, uno por línea</span>
+        </div>
+        <textarea class="field-input" id="edit-vocab-raw" rows="8"
+          style="font-family:'Noto Sans TC',sans-serif;font-size:16px;line-height:2"
+          placeholder="你好&#10;謝謝&#10;老師&#10;學生&#10;...">${L.vocab.map(v => v.zh).join('\n')}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <button class="btn-gold" onclick="generateVocabAI(${L.id})" id="gen-vocab-btn">
+            ✨ Generar pinyin y traducción con AI
+          </button>
+          <span id="gen-vocab-status" style="font-size:12px;color:var(--muted)"></span>
+        </div>
+        <div id="edit-vocab-preview" style="margin-top:10px"></div>
+      </div>
+
+      <div>
+        <div class="field-label">
+          Situaciones de práctica
+          <span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:8px">— una por línea</span>
+        </div>
+        <textarea class="field-input" id="edit-scenarios" rows="3"
+          style="font-size:13px">${scenariosStr}</textarea>
+      </div>
+
+      <div>
+        <div class="field-label">
+          Respuestas rápidas (chips)
+          <span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:8px">— una por línea, máx. 4</span>
+        </div>
+        <textarea class="field-input" id="edit-quick" rows="4"
+          style="font-family:'Noto Sans TC',sans-serif;font-size:14px">${quickStr}</textarea>
+      </div>
+
+      <div id="edit-msg"></div>
+
+      <div style="display:flex;gap:10px">
+        <button class="btn-gold" style="flex:1" onclick="saveLessonEdit(${L.id})">💾 Guardar cambios</button>
+        <button class="btn-sm" onclick="renderAdminPanel()">Cancelar</button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════
+// AI VOCAB GENERATOR
+// ═══════════════════════════════════════
+async function generateVocabAI(lessonId) {
+  const rawEl = document.getElementById('edit-vocab-raw');
+  const statusEl = document.getElementById('gen-vocab-status');
+  const previewEl = document.getElementById('edit-vocab-preview');
+  const btn = document.getElementById('gen-vocab-btn');
+
+  const chars = rawEl.value.trim().split('\n').map(l => l.trim()).filter(Boolean);
+  if (chars.length === 0) {
+    statusEl.textContent = '⚠️ Escribe al menos un carácter chino primero.';
+    return;
+  }
+
+  const apiKey = localStorage.getItem('mandarin_api_key');
+  if (!apiKey) {
+    statusEl.textContent = '⚠️ Necesitas una API key en el panel del profesor.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando...';
+  statusEl.textContent = '';
+  previewEl.innerHTML = '';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `Para cada uno de estos caracteres/palabras chinos de mandarín taiwanés, proporciona el pīnyīn con tonos marcados y la traducción al español. Responde SOLO con JSON válido, sin backticks ni texto extra:
+
+Palabras: ${chars.join(', ')}
+
+Formato exacto:
+[
+  {"zh": "你好", "py": "nǐhǎo", "es": "hola"},
+  {"zh": "謝謝", "py": "xièxiè", "es": "gracias"}
+]
+
+Usa caracteres tradicionales. Pīnyīn con todos los tonos marcados.`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const raw = data.content?.map(b => b.text || '').join('') || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const vocab = JSON.parse(clean);
+
+    // Store generated vocab on the lesson temporarily
+    window._pendingVocab = vocab;
+
+    // Show preview table
+    previewEl.innerHTML = `
+      <div style="font-size:12px;color:var(--jade);margin-bottom:8px">✅ ${vocab.length} palabras generadas. Revisa y guarda.</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="background:var(--paper);text-align:left">
+            <th style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif">漢字</th>
+            <th style="padding:6px 10px;border:1px solid var(--mist)">Pīnyīn</th>
+            <th style="padding:6px 10px;border:1px solid var(--mist)">Español</th>
+            <th style="padding:6px 10px;border:1px solid var(--mist)">✏️</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${vocab.map((v, i) => `
+            <tr>
+              <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">${v.zh}</td>
+              <td style="padding:6px 10px;border:1px solid var(--mist)">
+                <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)"
+                  value="${v.py}" onchange="window._pendingVocab[${i}].py=this.value">
+              </td>
+              <td style="padding:6px 10px;border:1px solid var(--mist)">
+                <input style="border:none;background:transparent;font-size:13px;width:100%"
+                  value="${v.es}" onchange="window._pendingVocab[${i}].es=this.value">
+              </td>
+              <td style="padding:6px 10px;border:1px solid var(--mist);text-align:center">
+                <button onclick="window._pendingVocab.splice(${i},1);generateVocabAI(${lessonId})" 
+                  style="background:none;border:none;cursor:pointer;color:var(--muted)">✕</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+
+    statusEl.textContent = '';
+    btn.textContent = '✨ Regenerar';
+  } catch(e) {
+    statusEl.innerHTML = `<span style="color:var(--vermillion)">Error: ${e.message}</span>`;
+    btn.textContent = '✨ Generar pinyin y traducción con AI';
+  }
+  btn.disabled = false;
+}
+
+function saveLessonEdit(id) {
+  const zh = document.getElementById('edit-zh').value.trim();
+  const es = document.getElementById('edit-es').value.trim();
+  const topic = document.getElementById('edit-topic').value.trim();
+  const grammar = document.getElementById('edit-grammar').value.trim();
+  const obj = document.getElementById('edit-obj').value.trim();
+  const scenariosRaw = document.getElementById('edit-scenarios').value.trim();
+  const quickRaw = document.getElementById('edit-quick').value.trim();
+  const msgEl = document.getElementById('edit-msg');
+
+  if (!zh || !es) {
+    msgEl.innerHTML = `<div class="error-msg">Por favor rellena al menos el título en chino y en español.</div>`;
+    return;
+  }
+
+  // Use AI-generated vocab if available, otherwise keep existing
+  let vocab = window._pendingVocab || null;
+  if (!vocab || vocab.length === 0) {
+    // Keep existing vocab from the lesson
+    const existing = state.lessons.find(l => l.id === id);
+    vocab = existing ? existing.vocab : [];
+    if (vocab.length === 0) {
+      msgEl.innerHTML = `<div class="error-msg">⚠️ Genera el vocabulario con AI primero, o añade palabras.</div>`;
+      return;
+    }
+  }
+
+  const scenarios = scenariosRaw.split('\n').map(l => l.trim()).filter(Boolean);
+  const quickReplies = quickRaw.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 4);
+
+  const idx = state.lessons.findIndex(l => l.id === id);
+  if (idx === -1) return;
+  state.lessons[idx] = {
+    ...state.lessons[idx],
+    zh, es, topic, grammarFocus: grammar, objectives: obj,
+    vocab, scenarios,
+    quickReplies: quickReplies.length ? quickReplies : vocab.slice(0,4).map(v => v.zh),
+  };
+
+  saveLessons();
+  renderSidebar();
+  window._pendingVocab = null;
+
+  msgEl.innerHTML = `<div class="success-msg">✅ Lección ${id} guardada. (${vocab.length} palabras)</div>`;
+
+  if (state.currentLessonId === id) {
+    document.getElementById('lesson-badge').textContent = `第${id}課 · ${zh} · ${topic}`;
+    renderQuickChips(state.lessons[idx].quickReplies);
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+loadLessons();
+renderSidebar();
+setupVoice();
+
+// Close sidebar on outside click (mobile)
+document.getElementById('messages') && document.addEventListener('click', (e) => {
+  if (window.innerWidth <= 680 && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
