@@ -805,47 +805,6 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
   color: #1A5C52;
   line-height: 1.6;
 }
-.device-check-card {
-  background: var(--paper);
-  border: 1.5px dashed var(--mist);
-  border-radius: 12px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.device-check-title { font-size: 13px; font-weight: 600; color: var(--ink); }
-.device-check-btn {
-  background: var(--ink);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.device-check-btn:hover { background: var(--ink-soft); }
-.device-check-btn:disabled { opacity: 0.6; cursor: wait; }
-.device-check-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  padding: 4px 0;
-}
-.device-check-line .status-ok { color: var(--jade); }
-.device-check-line .status-fail { color: var(--vermillion); }
-.device-check-fix {
-  font-size: 12px;
-  color: var(--muted);
-  background: white;
-  border-radius: 8px;
-  padding: 8px 10px;
-  margin-top: 4px;
-  line-height: 1.5;
-}
 </style>
 </head>
 <body>
@@ -897,14 +856,6 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
         💡 <strong>¿Necesitas ayuda durante la práctica?</strong><br>
         Escribe <span class="zh">"No entiendo"</span> y te daré la traducción.
         Toca 💡 para pedir una pista.
-      </div>
-
-      <div class="device-check-card" id="device-check-card">
-        <div class="device-check-title">🔧 Antes de empezar, revisemos tu dispositivo:</div>
-        <button class="device-check-btn" onclick="testMicAndSound()" id="device-check-btn">
-          🎙️🔊 Probar micrófono y sonido
-        </button>
-        <div id="device-check-result"></div>
       </div>
 
       <button class="welcome-start-btn" onclick="closeWelcomeModal()">
@@ -1672,9 +1623,8 @@ function speakChinese(text) {
 function setupVoice() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    document.getElementById('voice-btn').title = 'Tu navegador no soporta reconocimiento de voz. Usa Chrome.';
+    document.getElementById('voice-btn').title = 'Tu navegador no soporta reconocimiento de voz';
     document.getElementById('voice-btn').style.opacity = '0.4';
-    document.getElementById('voice-status').textContent = '⚠️ Este navegador no soporta el micrófono. Usa Chrome.';
     return;
   }
   state.recognition = new SpeechRecognition();
@@ -1696,53 +1646,25 @@ function setupVoice() {
     }
   };
   state.recognition.onerror = (e) => {
-    const statusEl = document.getElementById('voice-status');
-    const errorMessages = {
-      'not-allowed': '🚫 Micrófono bloqueado. Toca el 🔒 en la barra de direcciones y permite el micrófono, luego recarga la página.',
-      'no-speech': '🤔 No te escuché. Intenta de nuevo.',
-      'audio-capture': '🎙️ No se detectó micrófono. Revisa que tu dispositivo tenga uno conectado.',
-      'network': '📶 Error de red. Revisa tu conexión a internet.',
-      'service-not-allowed': '🚫 Micrófono bloqueado por el navegador. Revisa los permisos.',
-    };
-    statusEl.textContent = errorMessages[e.error] || ('Error: ' + e.error);
+    document.getElementById('voice-status').textContent = 'Error: ' + e.error;
     stopVoice();
   };
   state.recognition.onend = () => stopVoice();
 }
 
-// Check mic permission status proactively (does not request access yet)
-async function checkMicPermission() {
-  if (!navigator.permissions || !navigator.permissions.query) return null;
-  try {
-    const status = await navigator.permissions.query({ name: 'microphone' });
-    return status.state; // 'granted' | 'denied' | 'prompt'
-  } catch(e) {
-    return null;
-  }
-}
-
 function toggleVoice() {
-  if (!state.recognition) {
-    showToast('⚠️ Tu navegador no soporta el micrófono. Usa Chrome.');
-    return;
-  }
+  if (!state.recognition) return;
   if (state.isRecording) {
     state.recognition.stop();
   } else {
-    try {
-      state.recognition.start();
-    } catch(e) {
-      document.getElementById('voice-status').textContent = '🚫 No se pudo activar el micrófono. Revisa los permisos del navegador.';
-    }
+    try { state.recognition.start(); }
+    catch(e) { showToast('Activa el micrófono en tu navegador'); }
   }
 }
 function stopVoice() {
   state.isRecording = false;
   document.getElementById('voice-btn').classList.remove('recording');
-  setTimeout(() => {
-    const statusEl = document.getElementById('voice-status');
-    if (statusEl && !statusEl.textContent.includes('🚫')) statusEl.textContent = '';
-  }, 4000);
+  setTimeout(() => { document.getElementById('voice-status').textContent = ''; }, 3000);
 }
 
 // ═══════════════════════════════════════
@@ -2425,69 +2347,6 @@ function saveLessonEdit(id) {
 // ═══════════════════════════════════════
 function closeWelcomeModal() {
   document.getElementById('welcome-modal').classList.add('hidden');
-}
-
-async function testMicAndSound() {
-  const btn = document.getElementById('device-check-btn');
-  const resultEl = document.getElementById('device-check-result');
-  btn.disabled = true;
-  btn.textContent = '⏳ Probando...';
-  resultEl.innerHTML = '';
-
-  let micOK = false, micMsg = '';
-  let soundOK = false, soundMsg = '';
-
-  // ── Test microphone ──
-  try {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      micMsg = 'Tu navegador no soporta acceso al micrófono.';
-    } else {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(t => t.stop()); // release mic immediately
-      micOK = true;
-      micMsg = 'Micrófono permitido correctamente.';
-    }
-  } catch(e) {
-    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
-      micMsg = 'Permiso denegado. Toca el 🔒 candado en la barra de direcciones y permite el micrófono.';
-    } else if (e.name === 'NotFoundError') {
-      micMsg = 'No se detectó ningún micrófono en este dispositivo.';
-    } else {
-      micMsg = 'Error: ' + e.message;
-    }
-  }
-
-  // ── Test speaker / TTS ──
-  try {
-    if (!window.speechSynthesis) {
-      soundMsg = 'Tu navegador no soporta la voz de 花椰菜.';
-    } else {
-      const utt = new SpeechSynthesisUtterance('你好');
-      utt.lang = 'zh-TW';
-      utt.volume = 1;
-      window.speechSynthesis.speak(utt);
-      soundOK = true;
-      soundMsg = 'Deberías haber escuchado "你好". Si no oíste nada, sube el volumen de tu dispositivo.';
-    }
-  } catch(e) {
-    soundMsg = 'Error al probar el sonido: ' + e.message;
-  }
-
-  resultEl.innerHTML = `
-    <div class="device-check-line">
-      <span class="${micOK ? 'status-ok' : 'status-fail'}">${micOK ? '✅' : '❌'}</span>
-      <span>Micrófono</span>
-    </div>
-    ${!micOK ? `<div class="device-check-fix">${micMsg}</div>` : ''}
-    <div class="device-check-line">
-      <span class="${soundOK ? 'status-ok' : 'status-fail'}">${soundOK ? '✅' : '❌'}</span>
-      <span>Sonido (¿escuchaste "你好"?)</span>
-    </div>
-    ${!soundOK ? `<div class="device-check-fix">${soundMsg}</div>` : ''}
-  `;
-
-  btn.disabled = false;
-  btn.textContent = '🔄 Probar de nuevo';
 }
 // ═══════════════════════════════════════
 // INIT
