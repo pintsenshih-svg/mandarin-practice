@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>來！學華語 — Práctica de conversación</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -709,9 +707,213 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
   .mode-tab { padding: 6px 10px; font-size: 12px; }
   .msg-row { max-width: 88%; }
 }
+
+/* TTS button */
+.tts-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--jade-pale);
+  color: var(--jade);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.tts-btn:hover { background: var(--jade); color: white; }
+.tts-btn.muted { background: var(--paper-dark); color: var(--muted); }
+
+/* Welcome instructions modal */
+.welcome-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(28, 35, 51, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.welcome-modal-overlay.hidden { display: none; }
+.welcome-modal {
+  background: var(--white);
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+}
+.welcome-modal-header {
+  background: linear-gradient(135deg, var(--vermillion) 0%, #E8722A 100%);
+  border-radius: 20px 20px 0 0;
+  padding: 28px 24px;
+  text-align: center;
+  color: white;
+}
+.welcome-modal-header .big-emoji { font-size: 52px; margin-bottom: 8px; }
+.welcome-modal-header h2 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+.welcome-modal-header p { font-size: 14px; opacity: 0.9; }
+.welcome-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.instruction-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.step-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--vermillion-pale);
+  color: var(--vermillion);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-text { flex: 1; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.step-text strong { color: var(--vermillion); }
+.step-text .zh { font-family: 'Noto Sans TC', sans-serif; }
+.welcome-start-btn {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+  transition: background 0.15s;
+}
+.welcome-start-btn:hover { background: var(--ink-soft); }
+.welcome-tip {
+  background: var(--jade-pale);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #1A5C52;
+  line-height: 1.6;
+}
+.device-check-card {
+  background: var(--paper);
+  border: 1.5px dashed var(--mist);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.device-check-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.device-check-btn {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.device-check-btn:hover { background: var(--ink-soft); }
+.device-check-btn:disabled { opacity: 0.6; cursor: wait; }
+.device-check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 4px 0;
+}
+.device-check-line .status-ok { color: var(--jade); }
+.device-check-line .status-fail { color: var(--vermillion); }
+.device-check-fix {
+  font-size: 12px;
+  color: var(--muted);
+  background: white;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 4px;
+  line-height: 1.5;
+}
 </style>
 </head>
 <body>
+<!-- WELCOME INSTRUCTIONS -->
+<div class="welcome-modal-overlay" id="welcome-modal">
+  <div class="welcome-modal">
+    <div class="welcome-modal-header">
+      <div class="big-emoji">🥦</div>
+      <h2>你好！我是花椰菜</h2>
+      <p>Tu profesora de mandarín · Práctica de conversación</p>
+    </div>
+    <div class="welcome-modal-body">
+
+      <div class="instruction-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Elige una lección</strong> del panel izquierdo
+          (en el móvil, toca <strong>☰</strong> arriba a la izquierda).
+        </div>
+      </div>
+
+      <div class="instruction-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Elige un modo:</strong><br>
+          🤖 <strong>A</strong> — Yo te pregunto, tú respondes<br>
+          🎭 <strong>B</strong> — Conversación de situación real<br>
+          🙋 <strong>C</strong> — Tú me preguntas, yo respondo
+        </div>
+      </div>
+
+      <div class="instruction-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Escribe o habla:</strong> puedes escribir en chino,
+          o tocar el micrófono <strong>🎙️</strong> y hablar en mandarín.
+        </div>
+      </div>
+
+      <div class="instruction-step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          Yo hablaré en voz alta 🔊 — puedes activar o desactivar
+          mi voz con el botón junto al chat.
+        </div>
+      </div>
+
+      <div class="welcome-tip">
+        💡 <strong>¿Necesitas ayuda durante la práctica?</strong><br>
+        Escribe <span class="zh">"No entiendo"</span> y te daré la traducción.
+        Toca 💡 para pedir una pista.
+      </div>
+
+      <div class="device-check-card" id="device-check-card">
+        <div class="device-check-title">🔧 Antes de empezar, revisemos tu dispositivo:</div>
+        <button class="device-check-btn" onclick="testMicAndSound()" id="device-check-btn">
+          🎙️🔊 Probar micrófono y sonido
+        </button>
+        <div id="device-check-result"></div>
+      </div>
+
+      <button class="welcome-start-btn" onclick="closeWelcomeModal()">
+        開始練習 ¡Empezar! →
+      </button>
+    </div>
+  </div>
+</div>
+
 
 <!-- TOP BAR -->
 <div class="topbar">
@@ -731,10 +933,81 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">Lecciones</div>
-      <input type="text" class="search-input" id="lesson-search"
-        placeholder="Buscar lección..." oninput="filterLessons(this.value)">
+      <input type="text" class="search-input" id="lesson-search" placeholder="Buscar lección..." oninput="filterLessons(this.value)">
     </div>
-    <div class="lesson-list" id="lesson-list"></div>
+    <div class="lesson-list" id="lesson-list">
+    <div class="lesson-item " onclick="selectLesson(1)">
+      <div class="lesson-num">1</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">您好</div>
+        <div class="lesson-item-es">¡Hola!</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item active" onclick="selectLesson(2)">
+      <div class="lesson-num">2</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">我有兩個弟弟</div>
+        <div class="lesson-item-es">Tengo dos hermanos menores</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(3)">
+      <div class="lesson-num">3</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">她不是學生</div>
+        <div class="lesson-item-es">Ella no es estudiante</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(4)">
+      <div class="lesson-num">4</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">我爸爸在電腦公司上班</div>
+        <div class="lesson-item-es">Mi padre trabaja en una empresa de computadora</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(5)">
+      <div class="lesson-num">5</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">歡迎你來</div>
+        <div class="lesson-item-es">¡Bienvenido!</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(6)">
+      <div class="lesson-num">6</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">你平常喜歡做什麼</div>
+        <div class="lesson-item-es">¿Qué te gusta hacer normalmente?</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(7)">
+      <div class="lesson-num">7</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">請問您是哪位</div>
+        <div class="lesson-item-es">¿Puedo preguntar quién es usted?</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(8)">
+      <div class="lesson-num">8</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">祝你生日快樂</div>
+        <div class="lesson-item-es">¡Feliz cumpleaños!</div>
+      </div>
+    </div>
+  
+    <div class="lesson-item " onclick="selectLesson(9)">
+      <div class="lesson-num">9</div>
+      <div class="lesson-item-text">
+        <div class="lesson-item-zh">妳星期五有時間嗎</div>
+        <div class="lesson-item-es">¿Estás libre el viernes?</div>
+      </div>
+    </div>
+  </div>
     <div class="sidebar-footer" id="sidebar-footer">9 lecciones disponibles</div>
   </aside>
 
@@ -743,12 +1016,12 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
     <!-- Mode bar -->
     <div class="mode-tabs">
       <div class="huayecai-name">🥦 花椰菜</div>
-      <div class="mode-active-pill" id="mode-active-pill" style="display:none"></div>
-      <div class="lesson-badge" id="lesson-badge">← Elige una lección</div>
+      <div class="mode-active-pill" id="mode-active-pill" style="display: block;">🤖 Modo A</div>
+      <div class="lesson-badge" id="lesson-badge">第2課 · 我有兩個弟弟 · Familia y números</div>
     </div>
 
     <!-- Messages area OR welcome state -->
-    <div id="welcome-state" class="welcome-state">
+    <div id="welcome-state" class="welcome-state" style="display: none;">
       <div class="welcome-icon">🥦</div>
       <div class="welcome-title">你好，我是花椰菜！</div>
       <div class="welcome-sub">
@@ -757,29 +1030,37 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
         <span style="font-size:12px;opacity:0.7">Puedes escribir en chino, pinyin o usar el micrófono 🎙️</span>
       </div>
     </div>
-    <div class="messages" id="messages" style="display:none"></div>
+    <div class="messages" id="messages" style="display: flex;"><div style="text-align: center; font-size: 12px; color: var(--muted); padding: 4px 0px 8px;">🤖 Modo A — IA pregunta, tú respondes</div><div class="msg-row ai">
+    <div class="msg-avatar">🥦</div>
+    <div class="msg-body">
+      <div class="bubble"><div class="bubble-zh">你有兄弟姊妹嗎？</div><div class="bubble-py">Nǐ yǒu xiōngdì zǐmèi ma?</div></div>
+      
+      
+      
+      
+      
+    </div>
+  </div></div>
 
     <!-- Input area -->
-    <div class="input-area" id="input-area" style="display:none">
+    <div class="input-area" id="input-area" style="display: block;">
       <div class="quick-chips" id="quick-chips"></div>
       <div class="input-row">
-        <textarea class="text-input" id="text-input" rows="1"
-          placeholder="Escribe en chino o pinyin..."
-          oninput="autoResize(this)"
-          onkeydown="handleEnter(event)"></textarea>
+        <textarea class="text-input" id="text-input" rows="1" placeholder="Escribe en chino o pinyin..." oninput="autoResize(this)" onkeydown="handleEnter(event)" style="height: auto;"></textarea>
         <div class="btn-group">
           <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Mantén para hablar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-              <line x1="12" y1="19" x2="12" y2="23"/>
-              <line x1="8" y1="23" x2="16" y2="23"/>
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
             </svg>
           </button>
           <button class="hint-btn" onclick="requestHint()">💡</button>
+          <button class="tts-btn" id="tts-btn" onclick="toggleTTS()" title="花椰菜語音 開/關">🔊</button>
           <button class="send-btn" id="send-btn" onclick="sendMessage()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
             </svg>
           </button>
         </div>
@@ -794,7 +1075,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
   <div class="modal">
     <div class="modal-header">
       <span style="font-size:20px">🔒</span>
-      <h2 id="modal-title">Acceso al panel de profesor</h2>
+      <h2 id="modal-title">Panel del profesor</h2>
       <button class="modal-close" onclick="closeTeacherModal()">✕</button>
     </div>
     <div class="modal-body" id="modal-body">
@@ -809,185 +1090,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
 // ═══════════════════════════════════════════
 // LESSON DATA — 9 lessons from 來學華語 Book 1
 // ═══════════════════════════════════════════
-const DEFAULT_LESSONS = [
-  {
-    id: 1, zh: "您好", es: "¡Hola!", topic: "Saludos",
-    objectives: "Saludar · Decir nombre y apellido · Preguntar la nacionalidad",
-    vocab: [
-      {zh:"您",py:"nín",es:"usted (respetuoso)"},
-      {zh:"好",py:"hǎo",es:"bueno, bien"},
-      {zh:"我",py:"wǒ",es:"yo"},
-      {zh:"姓",py:"xìng",es:"apellidarse"},
-      {zh:"叫",py:"jiào",es:"llamarse"},
-      {zh:"什麼",py:"shénme",es:"qué, cómo"},
-      {zh:"名字",py:"míngzi",es:"nombre"},
-      {zh:"是",py:"shì",es:"ser"},
-      {zh:"人",py:"rén",es:"persona"},
-      {zh:"哪國人",py:"nǎ guó rén",es:"¿de qué país?"},
-      {zh:"請問",py:"qǐng wèn",es:"disculpe..."},
-      {zh:"貴姓",py:"guì xìng",es:"¿cómo se apellida usted?"},
-    ],
-    scenarios: ["Conocer a alguien nuevo en clase y presentarte formalmente",
-                "Preguntar el nombre y la nacionalidad de un compañero nuevo"],
-    grammarFocus: "我姓＿，叫＿。 ／ 您是哪國人？ ／ 是/不是",
-    quickReplies: ["您好！","我叫＿","我是美國人","請問您貴姓？"],
-  },
-  {
-    id: 2, zh: "我有兩個弟弟", es: "Tengo dos hermanos menores", topic: "Familia y números",
-    objectives: "Hablar de tu familia · Números 1–10 · Cuantificador 個",
-    vocab: [
-      {zh:"有",py:"yǒu",es:"tener, haber"},
-      {zh:"兩",py:"liǎng",es:"dos (con cuantificador)"},
-      {zh:"個",py:"gè",es:"cuantificador general"},
-      {zh:"弟弟",py:"dìdi",es:"hermano menor"},
-      {zh:"哥哥",py:"gēge",es:"hermano mayor"},
-      {zh:"姐姐",py:"jiějie",es:"hermana mayor"},
-      {zh:"妹妹",py:"mèimei",es:"hermana menor"},
-      {zh:"爸爸",py:"bàba",es:"papá"},
-      {zh:"媽媽",py:"māma",es:"mamá"},
-      {zh:"幾",py:"jǐ",es:"cuántos (menos de 10)"},
-    ],
-    scenarios: ["Describir tu familia a un amigo taiwanés que quiere conocerte mejor",
-                "Mostrar fotos de familia y presentar a cada persona"],
-    grammarFocus: "Num. + 個 + Sust. ／ 你有幾個兄弟姐妹？ ／ 沒有",
-    quickReplies: ["我有一個＿","你有幾個兄弟？","我沒有姐姐","我爸爸叫＿"],
-  },
-  {
-    id: 3, zh: "她不是學生", es: "Ella no es estudiante", topic: "Ocupaciones y negación",
-    objectives: "Hablar de profesiones · Negación con 不 · Presentar a terceros",
-    vocab: [
-      {zh:"學生",py:"xuéshēng",es:"estudiante"},
-      {zh:"老師",py:"lǎoshī",es:"profesor/a"},
-      {zh:"不",py:"bù",es:"no (negación)"},
-      {zh:"他/她",py:"tā",es:"él/ella"},
-      {zh:"也",py:"yě",es:"también"},
-      {zh:"都",py:"dōu",es:"todos, ambos"},
-      {zh:"醫生",py:"yīshēng",es:"médico/a"},
-      {zh:"這",py:"zhè",es:"este/esta"},
-      {zh:"那",py:"nà",es:"ese/aquel"},
-      {zh:"工作",py:"gōngzuò",es:"trabajar / trabajo"},
-    ],
-    scenarios: ["Hablar sobre tus compañeros de clase y sus profesiones",
-                "Corregir un malentendido sobre la profesión de alguien"],
-    grammarFocus: "是/不是 ／ 也/都 ／ 這/那 + 是 + persona",
-    quickReplies: ["她不是學生","他是醫生嗎？","我也是學生","他們都是老師"],
-  },
-  {
-    id: 4, zh: "我爸爸在電腦公司上班", es: "Mi padre trabaja en una empresa", topic: "Trabajo y lugares",
-    objectives: "Describir el trabajo · Usar 在 para ubicación · Estado: 忙/累/好",
-    vocab: [
-      {zh:"在",py:"zài",es:"estar en / en"},
-      {zh:"公司",py:"gōngsī",es:"empresa"},
-      {zh:"上班",py:"shàngbān",es:"ir a trabajar"},
-      {zh:"電腦",py:"diànnǎo",es:"computadora"},
-      {zh:"銀行",py:"yínháng",es:"banco"},
-      {zh:"學校",py:"xuéxiào",es:"escuela"},
-      {zh:"忙",py:"máng",es:"ocupado/a"},
-      {zh:"喜歡",py:"xǐhuān",es:"gustar"},
-      {zh:"但是",py:"dànshì",es:"pero"},
-      {zh:"醫院",py:"yīyuàn",es:"hospital"},
-    ],
-    scenarios: ["Hablar sobre dónde trabaja tu familia","Preguntar dónde trabaja alguien y cómo le va"],
-    grammarFocus: "在 + lugar + V. ／ V.est.: 忙/累/好 ／ 喜歡 + V.",
-    quickReplies: ["你在哪裡上班？","我爸爸在＿上班","我很忙","我喜歡我的工作"],
-  },
-  {
-    id: 5, zh: "歡迎你來", es: "¡Bienvenido!", topic: "Conocernos / Hospitalidad",
-    objectives: "Presentar a otras personas · Expresar hospitalidad · V.aux.: 想/會/可以",
-    vocab: [
-      {zh:"歡迎",py:"huānyíng",es:"bienvenido/a"},
-      {zh:"來",py:"lái",es:"venir"},
-      {zh:"去",py:"qù",es:"ir"},
-      {zh:"朋友",py:"péngyǒu",es:"amigo/a"},
-      {zh:"認識",py:"rènshi",es:"conocer (a alguien)"},
-      {zh:"很高興認識你",py:"hěn gāoxìng rènshi nǐ",es:"mucho gusto"},
-      {zh:"想",py:"xiǎng",es:"querer, pensar"},
-      {zh:"會",py:"huì",es:"saber (hacer algo)"},
-      {zh:"可以",py:"kěyǐ",es:"poder, se puede"},
-      {zh:"這是",py:"zhè shì",es:"este/a es..."},
-    ],
-    scenarios: ["Presentar a un amigo a tu familia","Recibir a un visitante en tu casa y hacerle sentir bienvenido"],
-    grammarFocus: "V.aux.: 想/會/可以 + V. ／ 很高興認識你",
-    quickReplies: ["歡迎你來！","這是我的朋友＿","很高興認識你","我想去＿"],
-  },
-  {
-    id: 6, zh: "你平常喜歡做什麼", es: "¿Qué te gusta hacer normalmente?", topic: "Pasatiempos",
-    objectives: "Hablar de hobbies · Expresar gustos · Frecuencia: 常常/有時候/很少",
-    vocab: [
-      {zh:"平常",py:"píngcháng",es:"normalmente"},
-      {zh:"聽音樂",py:"tīng yīnyuè",es:"escuchar música"},
-      {zh:"看電視",py:"kàn diànshì",es:"ver televisión"},
-      {zh:"運動",py:"yùndòng",es:"hacer deporte"},
-      {zh:"跑步",py:"pǎobù",es:"correr"},
-      {zh:"游泳",py:"yóuyǒng",es:"nadar"},
-      {zh:"常常",py:"chángcháng",es:"frecuentemente"},
-      {zh:"有時候",py:"yǒu shíhòu",es:"a veces"},
-      {zh:"不太",py:"bù tài",es:"no muy / no mucho"},
-      {zh:"很少",py:"hěn shǎo",es:"pocas veces"},
-    ],
-    scenarios: ["Preguntar a un compañero qué hace en su tiempo libre","Hablar sobre el fin de semana pasado"],
-    grammarFocus: "喜歡 + V. ／ 頻率: 常常/有時候/很少 + V.",
-    quickReplies: ["我喜歡＿","我常常＿","你平常做什麼？","我有時候游泳"],
-  },
-  {
-    id: 7, zh: "請問您是哪位", es: "¿Puedo preguntar quién es usted?", topic: "Llamadas telefónicas",
-    objectives: "Hablar por teléfono formalmente · Identificarse · Dejar mensaje",
-    vocab: [
-      {zh:"電話",py:"diànhuà",es:"teléfono"},
-      {zh:"號碼",py:"hàomǎ",es:"número"},
-      {zh:"打電話",py:"dǎ diànhuà",es:"llamar por teléfono"},
-      {zh:"哪位",py:"nǎ wèi",es:"¿quién? (formal)"},
-      {zh:"等一下",py:"děng yīxià",es:"espera un momento"},
-      {zh:"留言",py:"liú yán",es:"dejar mensaje"},
-      {zh:"不在",py:"bú zài",es:"no está"},
-      {zh:"找",py:"zhǎo",es:"buscar, llamar a"},
-      {zh:"請問",py:"qǐng wèn",es:"disculpe"},
-      {zh:"手機",py:"shǒujī",es:"teléfono móvil"},
-    ],
-    scenarios: ["Llamar a la oficina de un profesor y dejar un mensaje","Preguntar el número de teléfono de alguien"],
-    grammarFocus: "請問您是哪位？ ／ 我找＿ ／ 他不在，可以留言嗎？",
-    quickReplies: ["請問您是哪位？","我找＿老師","他在嗎？","我可以留言嗎？"],
-  },
-  {
-    id: 8, zh: "祝你生日快樂", es: "¡Feliz cumpleaños!", topic: "Cumpleaños y fechas",
-    objectives: "Decir fechas · Cumpleaños y edades · Hacer peticiones con 請",
-    vocab: [
-      {zh:"生日",py:"shēngrì",es:"cumpleaños"},
-      {zh:"快樂",py:"kuàilè",es:"feliz, alegre"},
-      {zh:"幾月",py:"jǐ yuè",es:"¿qué mes?"},
-      {zh:"幾號",py:"jǐ hào",es:"¿qué día?"},
-      {zh:"幾歲",py:"jǐ suì",es:"¿cuántos años?"},
-      {zh:"月",py:"yuè",es:"mes"},
-      {zh:"號",py:"hào",es:"día del mes"},
-      {zh:"歲",py:"suì",es:"años de edad"},
-      {zh:"請",py:"qǐng",es:"invitar, por favor"},
-      {zh:"蛋糕",py:"dàngāo",es:"pastel"},
-    ],
-    scenarios: ["Organizar la fiesta de cumpleaños de un amigo","Preguntar la fecha de cumpleaños y la edad"],
-    grammarFocus: "几月几号 ／ 几岁 ／ 請 + V. (invitación)",
-    quickReplies: ["你幾月幾號生日？","祝你生日快樂！","我今年＿歲","你幾歲？"],
-  },
-  {
-    id: 9, zh: "妳星期五有時間嗎", es: "¿Estás libre el viernes?", topic: "Planes sociales",
-    objectives: "Invitar a alguien · Hora y fechas completas · Aceptar/rechazar · 因為…所以…",
-    vocab: [
-      {zh:"星期",py:"xīngqī",es:"día de la semana"},
-      {zh:"時間",py:"shíjiān",es:"tiempo, hora"},
-      {zh:"有空",py:"yǒu kòng",es:"tener tiempo libre"},
-      {zh:"點",py:"diǎn",es:"en punto (hora)"},
-      {zh:"半",py:"bàn",es:"media (hora)"},
-      {zh:"吃飯",py:"chī fàn",es:"comer (una comida)"},
-      {zh:"一起",py:"yīqǐ",es:"juntos/as"},
-      {zh:"沒問題",py:"méi wèntí",es:"sin problema"},
-      {zh:"對不起",py:"duìbuqǐ",es:"lo siento"},
-      {zh:"因為",py:"yīnwèi",es:"porque"},
-      {zh:"所以",py:"suǒyǐ",es:"por eso"},
-    ],
-    scenarios: ["Invitar a un amigo a cenar este fin de semana","Coordinar una reunión de estudio: día, hora y lugar"],
-    grammarFocus: "星期＋几 ／ 几点几分 ／ 因為…所以… ／ 好不好？可以嗎？",
-    quickReplies: ["你星期五有空嗎？","我們幾點見？","沒問題！","對不起，我沒有空"],
-  },
-];
+const DEFAULT_LESSONS = [{"id":1,"zh":"您好","es":"¡Hola!","topic":"Saludos","objectives":"Saludar · Decir nombre y apellido · Preguntar la nacionalidad","vocab":[{"zh":"您","py":"nín","es":"usted (forma de respeto)"},{"zh":"好","py":"hǎo","es":"bien / bueno"},{"zh":"我","py":"wǒ","es":"yo"},{"zh":"姓","py":"xìng","es":"apellidarse / apellido"},{"zh":"叫","py":"jiào","es":"llamarse / llamar"},{"zh":"什麼","py":"shénme","es":"qué / cuál"},{"zh":"名字","py":"míngzì","es":"nombre"},{"zh":"是","py":"shì","es":"ser / estar / es"},{"zh":"人","py":"rén","es":"persona / gente"},{"zh":"哪國人","py":"nǎ guó rén","es":"¿de qué país es? / ¿cuál es su nacionalidad?"},{"zh":"請問","py":"qǐngwèn","es":"disculpe / permítame preguntar"},{"zh":"貴姓","py":"guìxìng","es":"¿cuál es su apellido? (forma honorífica)"},{"zh":"您呢?","py":"nín ne?","es":"¿y usted?"},{"zh":"台灣","py":"Táiwān","es":"Taiwán"},{"zh":"美國","py":"Měiguó","es":"Estados Unidos"},{"zh":"他","py":"tā","es":"él"}],"scenarios":["Conocer a alguien nuevo en clase y presentarte formalmente","Preguntar el nombre y la nacionalidad de un compañero nuevo"],"grammarFocus":"我姓＿，叫＿。 ／ 您是哪國人？ ／ 是 ／ 你叫什麼名字?","quickReplies":["您好！/你好!","我姓＿/叫＿","我是＿人","請問您貴姓？/ 你叫什麼名字?"]},{"id":2,"zh":"我有兩個弟弟","es":"Tengo dos hermanos menores","topic":"Familia y números","objectives":"Hablar de tu familia · Números 1–2 · Cuantificador 個","vocab":[{"zh":"有","py":"yǒu","es":"tener / haber"},{"zh":"一","py":"yī","es":"uno"},{"zh":"兩","py":"liǎng","es":"dos (antes de clasificador)"},{"zh":"個","py":"gè","es":"clasificador general"},{"zh":"弟弟","py":"dìdi","es":"hermano menor"},{"zh":"哥哥","py":"gēge","es":"hermano mayor"},{"zh":"姐姐/姊姊","py":"jiějie/zǐzǐ","es":"hermana mayor"},{"zh":"妹妹","py":"mèimei","es":"hermana menor"},{"zh":"爸爸","py":"bàba","es":"papá"},{"zh":"媽媽","py":"māma","es":"mamá"},{"zh":"幾","py":"jǐ","es":"cuántos / algunos"},{"zh":"你/妳","py":"nǐ","es":"tú"},{"zh":"嗎","py":"ma","es":"partícula interrogativa"},{"zh":"也","py":"yě","es":"también"},{"zh":"沒有","py":"méiyǒu","es":"no tener / no haber"},{"zh":"只","py":"zhǐ","es":"solo / solamente"},{"zh":"兄弟姊妹","py":"xiōngdì zǐmèi","es":"hermanos y hermanas / hermanos"}],"scenarios":["Describir tu familia a un amigo que quiere conocerte mejor","Mostrar fotos de familia y presentar a cada persona"],"grammarFocus":"Num. + 個 + Sust. ／ 你有兄弟姐妹嗎？ ／ 沒有 ／ 也 ／ 嗎 ／ 你有幾個兄弟姊妹?","quickReplies":["我有一個＿","你有兄弟姊妹嗎? / 你有幾個兄弟姊妹？","我沒有＿","我爸爸叫＿"]},{"id":3,"zh":"她不是學生","es":"Ella no es estudiante","topic":"Ocupaciones y negación","objectives":"Hablar de lugares de profesiones · Negación con 不 · si es un estudiante","vocab":[{"zh":"學生","py":"xuéshēng","es":"estudiante"},{"zh":"老師","py":"lǎoshī","es":"profesor/a"},{"zh":"不","py":"bù","es":"no"},{"zh":"他/她","py":"tā/tā","es":"él/ella"},{"zh":"大學","py":"dàxué","es":"universidad"},{"zh":"都","py":"dōu","es":"todos, ambos, también"},{"zh":"在","py":"zài","es":"estar en, en"},{"zh":"哪裡(那兒)","py":"nǎlǐ (nàr)","es":"dónde"},{"zh":"工作","py":"gōngzuò","es":"trabajo, trabajar"},{"zh":"銀行","py":"yínháng","es":"banco"},{"zh":"電腦","py":"diànnǎo","es":"ordenador, computadora"},{"zh":"公司","py":"gōngsī","es":"empresa, compañía"},{"zh":"孩子","py":"háizi","es":"niño/a, hijo/a"},{"zh":"兒子","py":"érzi","es":"hijo"},{"zh":"女兒","py":"nǚér","es":"hija"},{"zh":"小孩","py":"xiǎohái","es":"niño/a, infante"},{"zh":"小學","py":"xiǎoxué","es":"escuela primaria"},{"zh":"他們/她們","py":"tāmen/tāmen","es":"ellos/ellas"},{"zh":"念書","py":"niànshū","es":"estudiar, leer libros"},{"zh":"法國","py":"Fǎguó","es":"Francia"},{"zh":"和","py":"hé","es":"y, con"}],"scenarios":["Hablar sobre tus compañeros de clase y sus lugares de trabajos","Usar 不/也/都 en oraciones"],"grammarFocus":"不 ／ 也/都 ／ 在+[lugar]+[v]","quickReplies":["她不是學生/他是學生嗎？","我在大學工作","我也是學生","他們都是老師"]},{"id":4,"zh":"我爸爸在電腦公司上班","es":"Mi padre trabaja en una empresa de computadora","topic":"Trabajo y lugares","objectives":"Describir el trabajo · Usar 在 para ubicación · Estado: 忙/累/好","vocab":[{"zh":"爸爸","py":"bàba","es":"papá"},{"zh":"媽媽","py":"māma","es":"mamá"},{"zh":"老師","py":"lǎoshī","es":"maestro/a, profesor/a"},{"zh":"忙","py":"máng","es":"ocupado/a"},{"zh":"很","py":"hěn","es":"muy"},{"zh":"每天","py":"měitiān","es":"todos los días, cada día"},{"zh":"累","py":"lèi","es":"cansado/a"},{"zh":"喜歡","py":"xǐhuān","es":"gustar, amar, tener gusto por"},{"zh":"小孩子","py":"xiǎoháizi","es":"niño/a, niños"},{"zh":"說","py":"shuō","es":"hablar, decir"},{"zh":"教","py":"jiāo","es":"enseñar"},{"zh":"法文","py":"fǎwén","es":"francés (idioma)"},{"zh":"教書","py":"jiāoshū","es":"enseñar, dar clases"},{"zh":"今天","py":"jīntiān","es":"hoy"}],"scenarios":["Hablar sobre dónde trabaja tu familia","Preguntar dónde trabaja alguien y cómo le va"],"grammarFocus":"在 + lugar + V. ／ V.est.: 忙/累/好 ／ V. 不 V. ／ 的 ／ 呢","quickReplies":["你在哪裡工作？","我＿在＿工作","我很忙/累/好","我喜歡我的工作"]},{"id":5,"zh":"歡迎你來","es":"¡Bienvenido!","topic":"Conocernos / Hospitalidad","objectives":"Presentar a otras personas · Expresar hospitalidad · Hablar sobre planes para las vacaciones","vocab":[{"zh":"這","py":"zhè","es":"este/esta/esto"},{"zh":"朋友","py":"péngyǒu","es":"amigo/a"},{"zh":"認識","py":"rènshì","es":"conocer (a alguien)"},{"zh":"高興","py":"gāoxìng","es":"contento/a, alegre"},{"zh":"平常","py":"píngcháng","es":"normalmente, habitualmente"},{"zh":"住在","py":"zhùzài","es":"vivir en, residir en"},{"zh":"現在","py":"xiànzài","es":"ahora, actualmente"},{"zh":"學校","py":"xuéxiào","es":"escuela, colegio"},{"zh":"放假","py":"fàngjià","es":"tener vacaciones, estar de vacaciones"},{"zh":"來","py":"lái","es":"venir"},{"zh":"玩","py":"wán","es":"jugar, divertirse, pasar el rato"},{"zh":"歡迎","py":"huānyíng","es":"bienvenido/a, dar la bienvenida"},{"zh":"想","py":"xiǎng","es":"querer, pensar, extrañar"},{"zh":"去","py":"qù","es":"ir"},{"zh":"國家","py":"guójiā","es":"país, nación"},{"zh":"公園","py":"gōngyuán","es":"parque"},{"zh":"好久不見","py":"hǎojiǔbújiàn","es":"cuánto tiempo sin verte, hace mucho que no nos vemos"},{"zh":"臺北","py":"Táiběi","es":"Taipéi (capital de Taiwán)"},{"zh":"誰","py":"shéi","es":"quién"},{"zh":"父母","py":"fùmǔ","es":"padres (padre y madre)"}],"scenarios":["Presentar a un amigo a otros","Recibir a un visitante en tu casa y hacerle sentir bienvenido"],"grammarFocus":"這是[relacion personal], [nombre] / 住在[lugar] / Pronombres interrogativos chinos / S + 去 + lugar + V","quickReplies":["歡迎你來！","很高興認識你 / 認識你很高興","我想去＿","我住在＿"]},{"id":6,"zh":"你平常喜歡做什麼","es":"¿Qué te gusta hacer normalmente?","topic":"Pasatiempos","objectives":"Hablar de hobbies · Expresar gustos y disgustos · Describir sus actividades diarias","vocab":[{"zh":"運動","py":"yùndòng","es":"ejercicio / deporte"},{"zh":"做","py":"zuò","es":"hacer"},{"zh":"週末","py":"zhōumò","es":"fin de semana"},{"zh":"打","py":"dǎ","es":"golpear / jugar (deportes con raqueta o mano)"},{"zh":"網球","py":"wǎngqiú","es":"tenis"},{"zh":"聽","py":"tīng","es":"escuchar"},{"zh":"音樂","py":"yīnyuè","es":"música"},{"zh":"和","py":"hé","es":"y / con"},{"zh":"可是","py":"kěshì","es":"pero / sin embargo"},{"zh":"還","py":"hái","es":"todavía / también / además"},{"zh":"看","py":"kàn","es":"mirar / ver"},{"zh":"電視","py":"diànshì","es":"televisión"},{"zh":"晚上","py":"wǎnshàng","es":"noche / por la noche"},{"zh":"常常","py":"chángcháng","es":"frecuentemente / a menudo"},{"zh":"家","py":"jiā","es":"casa / hogar / familia"},{"zh":"跑步","py":"pǎobù","es":"correr"},{"zh":"唱歌","py":"chànggē","es":"cantar"},{"zh":"跳舞","py":"tiàowǔ","es":"bailar"},{"zh":"上午","py":"shàngwǔ","es":"mañana / por la mañana (antes del mediodía)"}],"scenarios":["Preguntar a un compañero qué hace en su tiempo libre","Hablar sobre el fin de semana pasado","Preguntar a un compañero qué no le gusta hacer normalmente","Explicar que hizo, donde, y cuando"],"grammarFocus":"還 /S + Término de tiempo + 在 + Término de lugar + V / 也 都 不","quickReplies":["我喜歡＿","我常常＿","你平常做什麼？","你喜歡做什麼?"]},{"id":7,"zh":"請問您是哪位","es":"¿Puedo preguntar quién es usted?","topic":"Llamadas telefónicas","objectives":"Hablar por teléfono formalmente · Preguntar por números de teléfono móvil · Dejar mensaje","vocab":[{"zh":"電話","py":"diànhuà","es":"teléfono"},{"zh":"號碼","py":"hàomǎ","es":"número"},{"zh":"打電話","py":"dǎ diànhuà","es":"hacer una llamada telefónica"},{"zh":"哪位","py":"nǎ wèi","es":"¿quién? (forma cortés)"},{"zh":"下午","py":"xiàwǔ","es":"tarde (después del mediodía)"},{"zh":"回來","py":"huí lái","es":"regresar, volver"},{"zh":"辦公室","py":"bàngōngshì","es":"oficina"},{"zh":"請問","py":"qǐngwèn","es":"disculpe, permítame preguntarle"},{"zh":"手機","py":"shǒujī","es":"teléfono móvil, celular"},{"zh":"麻煩","py":"máfan","es":"molestia, molestar, por favor"},{"zh":"以後","py":"yǐhòu","es":"después, en el futuro"},{"zh":"給","py":"gěi","es":"dar, para"},{"zh":"謝謝","py":"xièxiè","es":"gracias"},{"zh":"再見","py":"zàijiàn","es":"adiós, hasta luego"},{"zh":"零","py":"líng","es":"cero"},{"zh":"二","py":"èr","es":"dos"},{"zh":"三","py":"sān","es":"tres"},{"zh":"四","py":"sì","es":"cuatro"},{"zh":"五","py":"wǔ","es":"cinco"},{"zh":"六","py":"liù","es":"seis"},{"zh":"七","py":"qī","es":"siete"},{"zh":"八","py":"bā","es":"ocho"},{"zh":"九","py":"jiǔ","es":"nueve"},{"zh":"十","py":"shí","es":"diez"},{"zh":"什麼時候","py":"shénme shíhòu","es":"¿cuándo?"},{"zh":"幾號","py":"jǐ hào","es":"¿qué número? ¿qué día?"},{"zh":"好的","py":"hǎo de","es":"está bien, de acuerdo"},{"zh":"不客氣","py":"bú kèqì","es":"de nada, no hay de qué"}],"scenarios":["Llamar a la oficina de un profesor y dejar un mensaje","Preguntar el número de teléfono de alguien"],"grammarFocus":"請問您是哪位？ ／ numeros en chino ／ 給+[alguien]+打電話  / 以後","quickReplies":["請問您是哪位？","他在嗎？","你的電話/手機號碼是幾號?","他什麼時候回來?"]},{"id":8,"zh":"祝你生日快樂","es":"¡Feliz cumpleaños!","topic":"Cumpleaños y fechas","objectives":"Decir fechas · Cumpleaños y edades · Hacer peticiones con 請, 好不好 y 可以嗎","vocab":[{"zh":"祝","py":"zhù","es":"desear (buenos deseos)"},{"zh":"生日","py":"shēngrì","es":"cumpleaños"},{"zh":"快樂","py":"kuàilè","es":"feliz / alegre"},{"zh":"大哥","py":"dàgē","es":"hermano mayor"},{"zh":"明天","py":"míngtiān","es":"mañana"},{"zh":"月","py":"yuè","es":"mes / luna"},{"zh":"號","py":"hào","es":"número / día del mes"},{"zh":"歲","py":"suì","es":"años de edad"},{"zh":"要","py":"yào","es":"querer / necesitar"},{"zh":"禮物","py":"lǐwù","es":"regalo"},{"zh":"雙","py":"shuāng","es":"par (clasificador para cosas en pares)"},{"zh":"運動鞋","py":"yùndòngxié","es":"zapatillas deportivas / tenis"},{"zh":"今天","py":"jīntiān","es":"hoy"},{"zh":"買","py":"mǎi","es":"comprar"},{"zh":"請","py":"qǐng","es":"por favor / invitar"},{"zh":"吃","py":"chī","es":"comer"},{"zh":"大餐","py":"dàcān","es":"gran comida / banquete"},{"zh":"是啊","py":"shìa","es":"sí, así es / claro que sí"},{"zh":"可以嗎","py":"kěyǐma","es":"¿se puede? / ¿está bien?"},{"zh":"好不好","py":"hǎobùhǎo","es":"¿de acuerdo? / ¿qué te parece?"},{"zh":"沒問題","py":"méiwèntí","es":"no hay problema"},{"zh":"今年","py":"jīnnián","es":"este año"},{"zh":"送","py":"sòng","es":"regalar / entregar"},{"zh":"日","py":"rì","es":"día / sol"}],"scenarios":["Organizar la fiesta de cumpleaños de un amigo","Preguntar la fecha de cumpleaños y la edad"],"grammarFocus":"幾月幾號 ／ 幾歲 ／ 請 + V. (invitación) / Preguntas de etiqueta","quickReplies":["你的生日是幾月幾號? / 你什麼時候生日?","祝你生日快樂！","我今年＿歲","你幾歲？"]},{"id":9,"zh":"妳星期五有時間嗎","es":"¿Estás libre el viernes?","topic":"Planes sociales","objectives":"Invitar a alguien · Hora y fechas completas · Aceptar/rechazar · Confirmar la fecha, hora y lugar de las invitaciones","vocab":[{"zh":"星期","py":"xīngqī","es":"semana / día de la semana"},{"zh":"時間","py":"shíjiān","es":"tiempo / hora"},{"zh":"同事","py":"tóngshì","es":"colega / compañero de trabajo"},{"zh":"要","py":"yào","es":"querer / necesitar / ir a (futuro)"},{"zh":"餐廳","py":"cāntīng","es":"restaurante"},{"zh":"跟...一起","py":"gēn...yīqǐ","es":"junto con... / con..."},{"zh":"行","py":"xíng","es":"está bien / de acuerdo / funciona"},{"zh":"下課","py":"xià kè","es":"terminar la clase / salir de clase"},{"zh":"點","py":"diǎn","es":"en punto (hora) / punto"},{"zh":"半","py":"bàn","es":"y media (hora) / mitad"},{"zh":"見","py":"jiàn","es":"ver / encontrarse / nos vemos"},{"zh":"那","py":"nà","es":"entonces / ese / eso"},{"zh":"家","py":"jiā","es":"casa / familia / (clasificador para establecimientos)"},{"zh":"最","py":"zuì","es":"el más / superlativo"},{"zh":"好吃","py":"hǎochī","es":"delicioso / rico (comida)"},{"zh":"吃飯","py":"chī fàn","es":"comer / tomar una comida"},{"zh":"不行","py":"bùxíng","es":"no está bien / no se puede / no funciona"},{"zh":"怎麼辦","py":"zěnme bàn","es":"¿qué hacemos? / ¿qué se puede hacer?"},{"zh":"太好了","py":"tài hǎo le","es":"¡qué bien! / ¡estupendo! / ¡genial!"},{"zh":"年","py":"nián","es":"año"},{"zh":"晚飯/晚餐","py":"wǎnfàn/wǎncān","es":"cena"}],"scenarios":["Invitar a un amigo a cenar este fin de semana","Coordinar una reunión de estudio: día, hora y lugar"],"grammarFocus":"星期幾 ／ 幾點幾分 ／ 跟[alguien]一起","quickReplies":["你-----有空嗎？","我們幾點見？","沒問題！","對不起，我沒有時間。"]}];
 
 // ═══════════════════════════════════════
 // STATE
@@ -1005,8 +1108,18 @@ let state = {
 
 function loadLessons() {
   try {
+    // DEFAULT_LESSONS is always the source of truth for L1-L9
+    // localStorage only stores extra lessons (id > 9) added by the teacher
     const saved = localStorage.getItem('mandarin_lessons');
-    state.lessons = saved ? JSON.parse(saved) : [...DEFAULT_LESSONS];
+    if (saved) {
+      const savedLessons = JSON.parse(saved);
+      // Keep DEFAULT_LESSONS as base, add any extra lessons (id > max default)
+      const maxDefaultId = Math.max(...DEFAULT_LESSONS.map(l => l.id));
+      const extraLessons = savedLessons.filter(l => l.id > maxDefaultId);
+      state.lessons = [...DEFAULT_LESSONS, ...extraLessons];
+    } else {
+      state.lessons = [...DEFAULT_LESSONS];
+    }
   } catch(e) {
     state.lessons = [...DEFAULT_LESSONS];
   }
@@ -1318,20 +1431,11 @@ async function callClaude(systemPrompt, userMessage, isOpening = false) {
     ? [{ role: 'user', content: userMessage }]
     : state.history;
 
-  const apiKey = localStorage.getItem('mandarin_api_key');
-  if (!apiKey) {
-    openTeacherModal();
-    return '⚠️ Falta la API key. Introdúcela en el panel del profesor (botón 🔒 arriba a la derecha).';
-  }
-
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://mandarin-proxy.pintsenshih.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -1426,6 +1530,12 @@ function appendAIMessage(raw, isHint = false) {
   `;
   msgs.appendChild(row);
   msgs.scrollTop = msgs.scrollHeight;
+
+  // Auto-speak Chinese dialogue lines
+  if (parsed && parsed.dialogueLines) {
+    const chineseLines = parsed.dialogueLines.filter(l => l.match(/[\u4e00-\u9fff]/));
+    if (chineseLines.length) speakChinese(chineseLines.join('，'));
+  }
 }
 
 function renderTransitionCard(text) {
@@ -1505,13 +1615,66 @@ function handleEnter(e) {
 }
 
 // ═══════════════════════════════════════
+// TTS — 花椰菜語音朗讀
+// ═══════════════════════════════════════
+state.ttsEnabled = true;
+state.ttsVoice = null;
+
+function setupTTS() {
+  if (!window.speechSynthesis) return;
+  function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    state.ttsVoice =
+      voices.find(v => v.lang === 'zh-TW') ||
+      voices.find(v => v.lang === 'zh-Hant') ||
+      voices.find(v => v.lang.startsWith('zh')) ||
+      null;
+  }
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function toggleTTS() {
+  state.ttsEnabled = !state.ttsEnabled;
+  const btn = document.getElementById('tts-btn');
+  if (!btn) return;
+  if (state.ttsEnabled) {
+    btn.textContent = '🔊';
+    btn.classList.remove('muted');
+    showToast('花椰菜語音：開啟 🔊');
+  } else {
+    btn.textContent = '🔇';
+    btn.classList.add('muted');
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    showToast('花椰菜語音：關閉 🔇');
+  }
+}
+
+function speakChinese(text) {
+  if (!state.ttsEnabled || !window.speechSynthesis) return;
+  // Extract only Chinese characters + punctuation
+  const chineseOnly = text
+    .replace(/[^\u4e00-\u9fff\u3000-\u303f\uff00-\uffef，。！？、：；「」『』]/g, ' ')
+    .trim();
+  if (!chineseOnly) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(chineseOnly);
+  utt.lang = 'zh-TW';
+  utt.rate = 0.85;
+  utt.pitch = 1.05;
+  if (state.ttsVoice) utt.voice = state.ttsVoice;
+  window.speechSynthesis.speak(utt);
+}
+
+// ═══════════════════════════════════════
 // VOICE INPUT
 // ═══════════════════════════════════════
 function setupVoice() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    document.getElementById('voice-btn').title = 'Tu navegador no soporta reconocimiento de voz';
+    document.getElementById('voice-btn').title = 'Tu navegador no soporta reconocimiento de voz. Usa Chrome.';
     document.getElementById('voice-btn').style.opacity = '0.4';
+    document.getElementById('voice-status').textContent = '⚠️ Este navegador no soporta el micrófono. Usa Chrome.';
     return;
   }
   state.recognition = new SpeechRecognition();
@@ -1533,25 +1696,53 @@ function setupVoice() {
     }
   };
   state.recognition.onerror = (e) => {
-    document.getElementById('voice-status').textContent = 'Error: ' + e.error;
+    const statusEl = document.getElementById('voice-status');
+    const errorMessages = {
+      'not-allowed': '🚫 Micrófono bloqueado. Toca el 🔒 en la barra de direcciones y permite el micrófono, luego recarga la página.',
+      'no-speech': '🤔 No te escuché. Intenta de nuevo.',
+      'audio-capture': '🎙️ No se detectó micrófono. Revisa que tu dispositivo tenga uno conectado.',
+      'network': '📶 Error de red. Revisa tu conexión a internet.',
+      'service-not-allowed': '🚫 Micrófono bloqueado por el navegador. Revisa los permisos.',
+    };
+    statusEl.textContent = errorMessages[e.error] || ('Error: ' + e.error);
     stopVoice();
   };
   state.recognition.onend = () => stopVoice();
 }
 
+// Check mic permission status proactively (does not request access yet)
+async function checkMicPermission() {
+  if (!navigator.permissions || !navigator.permissions.query) return null;
+  try {
+    const status = await navigator.permissions.query({ name: 'microphone' });
+    return status.state; // 'granted' | 'denied' | 'prompt'
+  } catch(e) {
+    return null;
+  }
+}
+
 function toggleVoice() {
-  if (!state.recognition) return;
+  if (!state.recognition) {
+    showToast('⚠️ Tu navegador no soporta el micrófono. Usa Chrome.');
+    return;
+  }
   if (state.isRecording) {
     state.recognition.stop();
   } else {
-    try { state.recognition.start(); }
-    catch(e) { showToast('Activa el micrófono en tu navegador'); }
+    try {
+      state.recognition.start();
+    } catch(e) {
+      document.getElementById('voice-status').textContent = '🚫 No se pudo activar el micrófono. Revisa los permisos del navegador.';
+    }
   }
 }
 function stopVoice() {
   state.isRecording = false;
   document.getElementById('voice-btn').classList.remove('recording');
-  setTimeout(() => { document.getElementById('voice-status').textContent = ''; }, 3000);
+  setTimeout(() => {
+    const statusEl = document.getElementById('voice-status');
+    if (statusEl && !statusEl.textContent.includes('🚫')) statusEl.textContent = '';
+  }, 4000);
 }
 
 // ═══════════════════════════════════════
@@ -1728,12 +1919,22 @@ function renderAdminPanel() {
         <button class="btn-gold" onclick="exportHTML()" style="width:100%;padding:12px">
           💾 下載目前設定（儲存我的修改）
         </button>
+        <button class="btn-sm" style="background:var(--jade-pale);color:var(--jade);border-color:var(--jade);width:100%;padding:10px" onclick="clearCacheAndReload()">
+          🔄 清除快取並重新載入（修復詞彙消失問題）
+        </button>
         <div style="text-align:center">
           <button class="btn-sm" onclick="resetToDefaults()">↺ Restaurar lecciones originales (1–9)</button>
         </div>
       </div>
     </div>
   `;
+}
+
+function clearCacheAndReload() {
+  if (!confirm('這會清除瀏覽器快取，重新載入最新詞彙。確定嗎？')) return;
+  localStorage.removeItem('mandarin_lessons');
+  showToast('✅ 快取已清除！重新載入中...');
+  setTimeout(() => location.reload(), 1000);
 }
 
 function handleDragOver(e) {
@@ -1756,14 +1957,11 @@ async function handlePDFUpload(file) {
     const base64 = await fileToBase64(file);
     const nextId = Math.max(...state.lessons.map(l => l.id)) + 1;
 
-    const apiKey = localStorage.getItem('mandarin_api_key') || '';
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // API key handled by Worker proxy
+    const res = await fetch('https://mandarin-proxy.pintsenshih.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -1825,21 +2023,18 @@ async function generateNewVocabAI() {
     statusEl.textContent = '⚠️ Escribe al menos un carácter primero.';
     return;
   }
-  const apiKey = localStorage.getItem('mandarin_api_key');
-  if (!apiKey) { statusEl.textContent = '⚠️ Necesitas API key.'; return; }
+  // API key handled by Worker proxy
+  
 
   btn.disabled = true;
   btn.textContent = '⏳ Generando...';
   statusEl.textContent = '';
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://mandarin-proxy.pintsenshih.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6', max_tokens: 1000,
@@ -1945,46 +2140,27 @@ function resetToDefaults() {
 // EXPORT HTML WITH CURRENT LESSONS BAKED IN
 // ═══════════════════════════════════════
 function exportHTML() {
+  // Bake current lessons directly into DEFAULT_LESSONS in the downloaded file
   const lessonsJSON = JSON.stringify(state.lessons);
+  let source = document.documentElement.outerHTML;
 
-  // Fetch the original HTML source as text (works both locally and on CodePen)
-  const source = document.documentElement.outerHTML;
+  // Remove any previously injected EXPORT_DATA blocks
+  source = source.replace(/<!--EXPORT_DATA-->[\s\S]*?<!--\/EXPORT_DATA-->/g, '');
 
-  // Strategy: inject lessons as a script tag right before </body>
-  // Remove any previously injected export tag first
-  let cleaned = source.replace(/<!--EXPORT_DATA-->[\s\S]*?<!--\/EXPORT_DATA-->/g, '');
+  // Replace DEFAULT_LESSONS constant with current lessons
+  source = source.replace(
+    /const DEFAULT_LESSONS = \[[\s\S]*?\];/,
+    'const DEFAULT_LESSONS = ' + lessonsJSON + ';'
+  );
 
-  // Inject current lessons right before </body>
-  const injection = `<!--EXPORT_DATA--><script>
-(function(){
-  var exported = ${lessonsJSON};
-  var orig = window.loadLessons;
-  window.loadLessons = function(){
-    try {
-      var saved = localStorage.getItem('mandarin_lessons');
-      if (!saved) {
-        state.lessons = exported;
-        saveLessons();
-      } else {
-        state.lessons = JSON.parse(saved);
-      }
-    } catch(e) {
-      state.lessons = exported;
-    }
-  };
-})();
-<\/script><!--/EXPORT_DATA-->`;
-
-  const finalHTML = cleaned.replace('</body>', injection + '</body>');
-
-  const blob = new Blob([finalHTML], { type: 'text/html;charset=utf-8' });
+  const blob = new Blob([source], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = '來學華語_對話練習_' + new Date().toISOString().slice(0,10) + '.html';
+  a.download = '\u4f86\u5b78\u83ef\u8a9e_\u5c0d\u8a71\u7df4\u7fd2_' + new Date().toISOString().slice(0,10) + '.html';
   a.click();
   URL.revokeObjectURL(url);
-  showToast('✅ 下載完成！把這個新版本貼到 CodePen 就會包含你的修改。');
+  showToast('\u2705 \u4e0b\u8f09\u5b8c\u6210\uff01\u9019\u500b\u6a94\u6848\u5df2\u5305\u542b\u4f60\u6240\u6709\u7684\u4fee\u6539\u3002');
 }
 
 // ═══════════════════════════════════════
@@ -2106,11 +2282,8 @@ async function generateVocabAI(lessonId) {
     return;
   }
 
-  const apiKey = localStorage.getItem('mandarin_api_key');
-  if (!apiKey) {
-    statusEl.textContent = '⚠️ Necesitas una API key en el panel del profesor.';
-    return;
-  }
+  // API key handled by Worker proxy
+  
 
   btn.disabled = true;
   btn.textContent = '⏳ Generando...';
@@ -2118,13 +2291,10 @@ async function generateVocabAI(lessonId) {
   previewEl.innerHTML = '';
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://mandarin-proxy.pintsenshih.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -2249,12 +2419,83 @@ function saveLessonEdit(id) {
   }
 }
 
+
+// ═══════════════════════════════════════
+// WELCOME MODAL
+// ═══════════════════════════════════════
+function closeWelcomeModal() {
+  document.getElementById('welcome-modal').classList.add('hidden');
+}
+
+async function testMicAndSound() {
+  const btn = document.getElementById('device-check-btn');
+  const resultEl = document.getElementById('device-check-result');
+  btn.disabled = true;
+  btn.textContent = '⏳ Probando...';
+  resultEl.innerHTML = '';
+
+  let micOK = false, micMsg = '';
+  let soundOK = false, soundMsg = '';
+
+  // ── Test microphone ──
+  try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      micMsg = 'Tu navegador no soporta acceso al micrófono.';
+    } else {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(t => t.stop()); // release mic immediately
+      micOK = true;
+      micMsg = 'Micrófono permitido correctamente.';
+    }
+  } catch(e) {
+    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') {
+      micMsg = 'Permiso denegado. Toca el 🔒 candado en la barra de direcciones y permite el micrófono.';
+    } else if (e.name === 'NotFoundError') {
+      micMsg = 'No se detectó ningún micrófono en este dispositivo.';
+    } else {
+      micMsg = 'Error: ' + e.message;
+    }
+  }
+
+  // ── Test speaker / TTS ──
+  try {
+    if (!window.speechSynthesis) {
+      soundMsg = 'Tu navegador no soporta la voz de 花椰菜.';
+    } else {
+      const utt = new SpeechSynthesisUtterance('你好');
+      utt.lang = 'zh-TW';
+      utt.volume = 1;
+      window.speechSynthesis.speak(utt);
+      soundOK = true;
+      soundMsg = 'Deberías haber escuchado "你好". Si no oíste nada, sube el volumen de tu dispositivo.';
+    }
+  } catch(e) {
+    soundMsg = 'Error al probar el sonido: ' + e.message;
+  }
+
+  resultEl.innerHTML = `
+    <div class="device-check-line">
+      <span class="${micOK ? 'status-ok' : 'status-fail'}">${micOK ? '✅' : '❌'}</span>
+      <span>Micrófono</span>
+    </div>
+    ${!micOK ? `<div class="device-check-fix">${micMsg}</div>` : ''}
+    <div class="device-check-line">
+      <span class="${soundOK ? 'status-ok' : 'status-fail'}">${soundOK ? '✅' : '❌'}</span>
+      <span>Sonido (¿escuchaste "你好"?)</span>
+    </div>
+    ${!soundOK ? `<div class="device-check-fix">${soundMsg}</div>` : ''}
+  `;
+
+  btn.disabled = false;
+  btn.textContent = '🔄 Probar de nuevo';
+}
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
 loadLessons();
 renderSidebar();
 setupVoice();
+setupTTS();
 
 // Close sidebar on outside click (mobile)
 document.getElementById('messages') && document.addEventListener('click', (e) => {
@@ -2263,5 +2504,6 @@ document.getElementById('messages') && document.addEventListener('click', (e) =>
   }
 });
 </script>
-</body>
-</html>
+
+
+</body></html>
