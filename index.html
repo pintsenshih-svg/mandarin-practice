@@ -850,7 +850,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
 </head>
 <body>
 <!-- WELCOME INSTRUCTIONS -->
-<div class="welcome-modal-overlay" id="welcome-modal">
+<div class="welcome-modal-overlay hidden" id="welcome-modal">
   <div class="welcome-modal">
     <div class="welcome-modal-header">
       <div class="big-emoji">🥦</div>
@@ -901,10 +901,19 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
 
       <div class="device-check-card" id="device-check-card">
         <div class="device-check-title">🔧 Antes de empezar, revisemos tu dispositivo:</div>
-        <button class="device-check-btn" onclick="testMicAndSound()" id="device-check-btn">
-          🎙️🔊 Probar micrófono y sonido
-        </button>
-        <div id="device-check-result"></div>
+        <button class="device-check-btn" onclick="testMicAndSound()" id="device-check-btn">🔄 Probar de nuevo</button>
+        <div id="device-check-result">
+    <div class="device-check-line">
+      <span class="status-ok">✅</span>
+      <span>Micrófono</span>
+    </div>
+    
+    <div class="device-check-line">
+      <span class="status-ok">✅</span>
+      <span>Sonido (¿escuchaste "你好"?)</span>
+    </div>
+    
+  </div>
       </div>
 
       <button class="welcome-start-btn" onclick="closeWelcomeModal()">
@@ -944,7 +953,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
       </div>
     </div>
   
-    <div class="lesson-item active" onclick="selectLesson(2)">
+    <div class="lesson-item " onclick="selectLesson(2)">
       <div class="lesson-num">2</div>
       <div class="lesson-item-text">
         <div class="lesson-item-zh">我有兩個弟弟</div>
@@ -1071,7 +1080,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
 </div>
 
 <!-- TEACHER MODAL -->
-<div class="modal-overlay" id="teacher-modal">
+<div class="modal-overlay open" id="teacher-modal">
   <div class="modal">
     <div class="modal-header">
       <span style="font-size:20px">🔒</span>
@@ -1079,8 +1088,191 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
       <button class="modal-close" onclick="closeTeacherModal()">✕</button>
     </div>
     <div class="modal-body" id="modal-body">
-      <!-- Auth or admin panel injected here -->
+    <div class="admin-panel">
+
+      <!-- API KEY -->
+      <div class="admin-section">
+        <div class="admin-section-header">🔑 API Key de Anthropic <span style="margin-left:auto;font-size:11px;color:var(--jade)">❌ Sin API key</span></div>
+        <div class="admin-section-body">
+          <p style="font-size:13px;color:var(--muted)">Introduce tu API key de Anthropic. Se guarda solo en este navegador, nadie más puede verla.</p>
+          <div style="display:flex;gap:8px">
+            <input type="password" class="field-input" id="api-key-input" placeholder="sk-ant-..." value="" style="flex:1;font-family:monospace;font-size:13px">
+            <button class="btn-gold" onclick="saveApiKey()">Guardar</button>
+          </div>
+          <div id="api-key-msg" style="font-size:12px;margin-top:6px"><span style="color:var(--jade)">✅ Guardado correctamente. Ya puedes cerrar este panel y practicar.</span></div>
+        </div>
+      </div>
+
+      <!-- Current lessons list -->
+      <div class="admin-section">
+        <div class="admin-section-header">
+          📚 Lecciones actuales <span style="margin-left:auto;font-weight:400;color:var(--muted)">9 en total</span>
+        </div>
+        <div class="admin-section-body">
+          <div class="lesson-admin-list">
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第1課</div>
+                <div class="lesson-admin-zh">您好 — ¡Hola!</div>
+                <div style="font-size:11px;color:var(--muted)">16 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(1)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第2課</div>
+                <div class="lesson-admin-zh">我有兩個弟弟 — Tengo dos hermanos menores</div>
+                <div style="font-size:11px;color:var(--muted)">17 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(2)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第3課</div>
+                <div class="lesson-admin-zh">她不是學生 — Ella no es estudiante</div>
+                <div style="font-size:11px;color:var(--muted)">21 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(3)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第4課</div>
+                <div class="lesson-admin-zh">我爸爸在電腦公司上班 — Mi padre trabaja en una empresa de computadora</div>
+                <div style="font-size:11px;color:var(--muted)">14 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(4)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第5課</div>
+                <div class="lesson-admin-zh">歡迎你來 — ¡Bienvenido!</div>
+                <div style="font-size:11px;color:var(--muted)">20 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(5)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第6課</div>
+                <div class="lesson-admin-zh">你平常喜歡做什麼 — ¿Qué te gusta hacer normalmente?</div>
+                <div style="font-size:11px;color:var(--muted)">19 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(6)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第7課</div>
+                <div class="lesson-admin-zh">請問您是哪位 — ¿Puedo preguntar quién es usted?</div>
+                <div style="font-size:11px;color:var(--muted)">28 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(7)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第8課</div>
+                <div class="lesson-admin-zh">祝你生日快樂 — ¡Feliz cumpleaños!</div>
+                <div style="font-size:11px;color:var(--muted)">24 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(8)">✏️ Editar</button>
+                
+              </div>
+            
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第9課</div>
+                <div class="lesson-admin-zh">妳星期五有時間嗎 — ¿Estás libre el viernes?</div>
+                <div style="font-size:11px;color:var(--muted)">21 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(9)">✏️ Editar</button>
+                
+              </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload PDF -->
+      <div class="admin-section">
+        <div class="admin-section-header">📄 Subir PDF de nueva lección</div>
+        <div class="admin-section-body">
+          <p style="font-size:13px;color:var(--muted)">Sube el PDF de una lección. El AI extraerá el vocabulario y los objetivos automáticamente.</p>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('pdf-input').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <input type="file" id="pdf-input" accept=".pdf" onchange="handlePDFUpload(this.files[0])">
+            <div class="upload-icon">📂</div>
+            <div>Haz clic o arrastra un PDF aquí</div>
+            <div style="font-size:11px;margin-top:4px;opacity:0.7">Formatos: .pdf · Máx 10MB</div>
+          </div>
+          <div id="upload-status"></div>
+        </div>
+      </div>
+
+      <!-- Manual lesson input -->
+      <div class="admin-section">
+        <div class="admin-section-header">✏️ Añadir nueva lección</div>
+        <div class="admin-section-body">
+          <div class="new-lesson-form">
+            <div class="two-col">
+              <div>
+                <div class="field-label">Título en chino 漢字</div>
+                <input class="field-input" id="new-zh" placeholder="e.g. 我餓了" style="font-family:'Noto Sans TC',sans-serif;font-size:16px">
+              </div>
+              <div>
+                <div class="field-label">Título en español</div>
+                <input class="field-input" id="new-es" placeholder="e.g. Tengo hambre">
+              </div>
+            </div>
+            <div class="two-col">
+              <div>
+                <div class="field-label">Tema</div>
+                <input class="field-input" id="new-topic" placeholder="e.g. Comida y restaurantes">
+              </div>
+              <div>
+                <div class="field-label">Gramática clave</div>
+                <input class="field-input" id="new-grammar" placeholder="e.g. 我想吃＿">
+              </div>
+            </div>
+            <div>
+              <div class="field-label">Objetivos de aprendizaje</div>
+              <input class="field-input" id="new-obj" placeholder="e.g. Pedir comida · Expresar preferencias">
+            </div>
+            <div>
+              <div class="field-label">
+                Vocabulario — escribe solo los caracteres chinos, uno por línea
+              </div>
+              <textarea class="field-input" id="new-vocab-raw" rows="6" style="font-family:'Noto Sans TC',sans-serif;font-size:16px;line-height:2" placeholder="餓
+飽
+好吃
+點菜
+餐廳"></textarea>
+              <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+                <button class="btn-gold" onclick="generateNewVocabAI()" id="gen-new-vocab-btn">
+                  ✨ Generar pinyin y traducción con AI
+                </button>
+                <span id="gen-new-vocab-status" style="font-size:12px;color:var(--muted)"></span>
+              </div>
+              <div id="new-vocab-preview" style="margin-top:10px"></div>
+            </div>
+            <div>
+              <div class="field-label">Situaciones de práctica (una por línea)</div>
+              <textarea class="field-input" id="new-scenarios" rows="2" placeholder="Pedir comida en un restaurante taiwanés
+Decirle a un amigo qué comida te gusta"></textarea>
+            </div>
+            <div id="new-lesson-msg"></div>
+            <button class="btn-gold" onclick="addLessonManually()">＋ Añadir lección al sitio</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export & Reset -->
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:4px">
+        <button class="btn-gold" onclick="exportHTML()" style="width:100%;padding:12px">
+          💾 下載目前設定（儲存我的修改）
+        </button>
+        <button class="btn-sm" style="background:var(--jade-pale);color:var(--jade);border-color:var(--jade);width:100%;padding:10px" onclick="clearCacheAndReload()">
+          🔄 清除快取並重新載入（修復詞彙消失問題）
+        </button>
+        <div style="text-align:center">
+          <button class="btn-sm" onclick="resetToDefaults()">↺ Restaurar lecciones originales (1–9)</button>
+        </div>
+      </div>
     </div>
+  </div>
   </div>
 </div>
 
