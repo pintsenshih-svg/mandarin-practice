@@ -1192,7 +1192,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
         <div class="admin-section-header">
           🔑 Código de acceso de la clase
           <span style="margin-left:auto;font-size:11px;color:var(--jade)">
-            ✅ Válido · 19 días restantes
+            ✅ Válido · 3 días restantes
           </span>
         </div>
         <div class="admin-section-body">
@@ -1218,7 +1218,7 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
       <!-- Current lessons list -->
       <div class="admin-section">
         <div class="admin-section-header">
-          📚 Lecciones actuales <span style="margin-left:auto;font-weight:400;color:var(--muted)">12 en total</span>
+          📚 Lecciones actuales <span style="margin-left:auto;font-weight:400;color:var(--muted)">13 en total</span>
         </div>
         <div class="admin-section-body">
           <div class="lesson-admin-list">
@@ -1319,6 +1319,14 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
                 <button class="btn-danger" onclick="deleteLesson(12)">✕</button>
               </div>
             
+              <div class="lesson-admin-item">
+                <div class="lesson-admin-num">第13課</div>
+                <div class="lesson-admin-zh">紅燒魚非常好吃 — El pescado estofado está muy rico</div>
+                <div style="font-size:11px;color:var(--muted)">29 palabras</div>
+                <button class="btn-sm" onclick="openLessonEditor(13)">✏️ Editar</button>
+                <button class="btn-danger" onclick="deleteLesson(13)">✕</button>
+              </div>
+            
           </div>
         </div>
       </div>
@@ -1380,14 +1388,267 @@ textarea.field-input { min-height: 80px; resize: vertical; font-family: 'Noto Sa
                 <button class="btn-gold" onclick="generateNewVocabAI()" id="gen-new-vocab-btn">✨ Generar pinyin y traducción con AI</button>
                 <span id="gen-new-vocab-status" style="font-size:12px;color:var(--muted)"></span>
               </div>
-              <div id="new-vocab-preview" style="margin-top:10px"></div>
+              <div id="new-vocab-preview" style="margin-top:10px">
+      <div style="font-size:12px;color:var(--jade);margin-bottom:8px">✅ 27 palabras generadas.</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--paper)">
+          <th style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif">漢字</th>
+          <th style="padding:6px 10px;border:1px solid var(--mist)">Pīnyīn</th>
+          <th style="padding:6px 10px;border:1px solid var(--mist)">Español</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">加</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="jiā" onchange="window._pendingNewVocab[0].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="agregar/añadir" onchange="window._pendingNewVocab[0].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">牛奶</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="niú nǎi" onchange="window._pendingNewVocab[1].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="leche" onchange="window._pendingNewVocab[1].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">糖</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="táng" onchange="window._pendingNewVocab[2].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="azúcar" onchange="window._pendingNewVocab[2].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">冰</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="bīng" onchange="window._pendingNewVocab[3].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="hielo" onchange="window._pendingNewVocab[3].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">中</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="zhōng" onchange="window._pendingNewVocab[4].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="mediano/medio" onchange="window._pendingNewVocab[4].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">小</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="xiǎo" onchange="window._pendingNewVocab[5].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="pequeño" onchange="window._pendingNewVocab[5].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">大</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="dà" onchange="window._pendingNewVocab[6].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="grande" onchange="window._pendingNewVocab[6].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">紅茶</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="hóng chá" onchange="window._pendingNewVocab[7].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="té negro" onchange="window._pendingNewVocab[7].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">別的</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="bié de" onchange="window._pendingNewVocab[8].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="otro/diferente" onchange="window._pendingNewVocab[8].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">塊</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="kuài" onchange="window._pendingNewVocab[9].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="trozo/pedazo (clasificador)" onchange="window._pendingNewVocab[9].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">蛋糕</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="dàn gāo" onchange="window._pendingNewVocab[10].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="pastel/tarta" onchange="window._pendingNewVocab[10].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">甜</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="tián" onchange="window._pendingNewVocab[11].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="dulce" onchange="window._pendingNewVocab[11].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">鹹</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="xián" onchange="window._pendingNewVocab[12].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="salado" onchange="window._pendingNewVocab[12].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">雞</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="jī" onchange="window._pendingNewVocab[13].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="pollo/gallina" onchange="window._pendingNewVocab[13].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">肉</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="ròu" onchange="window._pendingNewVocab[14].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="carne" onchange="window._pendingNewVocab[14].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">牛肉</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="niú ròu" onchange="window._pendingNewVocab[15].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="carne de res/ternera" onchange="window._pendingNewVocab[15].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">三明治</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="sān míng zhì" onchange="window._pendingNewVocab[16].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="sándwich" onchange="window._pendingNewVocab[16].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">如果</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="rú guǒ" onchange="window._pendingNewVocab[17].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="si/en caso de que" onchange="window._pendingNewVocab[17].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">就</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="jiù" onchange="window._pendingNewVocab[18].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="entonces/enseguida" onchange="window._pendingNewVocab[18].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">飲料</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="yǐn liào" onchange="window._pendingNewVocab[19].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="bebida" onchange="window._pendingNewVocab[19].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">一樣</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="yī yàng" onchange="window._pendingNewVocab[20].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="igual/lo mismo" onchange="window._pendingNewVocab[20].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">水</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="shuǐ" onchange="window._pendingNewVocab[21].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="agua" onchange="window._pendingNewVocab[21].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">等</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="děng" onchange="window._pendingNewVocab[22].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="esperar" onchange="window._pendingNewVocab[22].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">馬上</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="mǎ shàng" onchange="window._pendingNewVocab[23].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="enseguida/de inmediato" onchange="window._pendingNewVocab[23].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">咖啡店</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="kā fēi diàn" onchange="window._pendingNewVocab[24].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="cafetería" onchange="window._pendingNewVocab[24].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">雞肉三明治</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="jī ròu sān míng zhì" onchange="window._pendingNewVocab[25].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="sándwich de pollo" onchange="window._pendingNewVocab[25].es=this.value">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 10px;border:1px solid var(--mist);font-family:'Noto Sans TC',sans-serif;font-size:16px">冰水</td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%;color:var(--vermillion)" value="bīng shuǐ" onchange="window._pendingNewVocab[26].py=this.value">
+            </td>
+            <td style="padding:6px 10px;border:1px solid var(--mist)">
+              <input style="border:none;background:transparent;font-size:13px;width:100%" value="agua helada/agua con hielo" onchange="window._pendingNewVocab[26].es=this.value">
+            </td>
+          </tr>
+        </tbody>
+      </table></div>
             </div>
             <div>
               <div class="field-label">Situaciones de práctica (una por línea)</div>
               <textarea class="field-input" id="new-scenarios" rows="2" placeholder="Pedir comida en un restaurante taiwanés
 Decirle a un amigo qué comida te gusta"></textarea>
             </div>
-            <div id="new-lesson-msg"><div class="success-msg">✅ Lección 13 "紅燒魚非常好吃" añadida. Recuerda pulsar 💾 下載 para guardar.</div></div>
+            <div id="new-lesson-msg"></div>
             <button class="btn-gold" onclick="addLessonManually()">＋ Añadir lección al sitio</button>
           </div>
         </div>
@@ -1410,7 +1671,7 @@ Decirle a un amigo qué comida te gusta"></textarea>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">⏰ El acceso expira en 3 día(s) — el 2026-10-31</div>
 
 <script>
 // ═══════════════════════════════════════════
